@@ -11,7 +11,8 @@ require('dotenv').config();
 const app = express();
 
 //// db
-mongoose.connect(process.env.DATABASE, {
+const db_url = process.env.DATABASE_LOCAL || process.env.DATABASE_CLOUD;
+mongoose.connect(db_url, {
   useNewUrlParser: true,
   useCreateIndex: true, // インデックスを作成の許可
   useFindAndModify: false // FindAndModifyの無効化
