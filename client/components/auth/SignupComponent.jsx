@@ -1,5 +1,6 @@
-import {useState} from 'react';
-import {signup} from '../../actions/auth';
+import {useState, useEffect} from 'react';
+import Router from 'next/router';
+import {signup, isAuth} from '../../actions/auth';
 
 const SignupComponent = () => {
   const [values, setValues] = useState({
@@ -14,9 +15,18 @@ const SignupComponent = () => {
 
   const {name, email, password, error, loading, message, showForm} = values;
 
+  // ログインしてる場合、homeへ飛ばす
+  useEffect(() => {
+    isAuth() && Router.push(`/`);
+  }, []);
+
   const handleSubmit = e => {
     e.preventDefault();
-    setValues({...values, loading: true, error: false});
+    setValues({
+      ...values,
+      loading: true,
+      error: false,
+    });
     const user = {name, email, password};
 
     signup(user).then(data => {
@@ -38,7 +48,11 @@ const SignupComponent = () => {
   };
 
   const handleChange = name => e => {
-    setValues({...values, error: false, [name]: e.target.value});
+    setValues({
+      ...values,
+      error: false,
+      [name]: e.target.value,
+    });
   };
 
   const showLoading = () =>
