@@ -1,16 +1,18 @@
 import fetch from 'isomorphic-fetch';
 import cookie from 'js-cookie';
-import {API} from '../config';
+import {
+  API
+} from '../config';
 
 export const signup = user => {
   return fetch(`${API}/signup`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(user),
-  })
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
+    })
     .then(response => {
       return response.json();
     })
@@ -19,16 +21,28 @@ export const signup = user => {
 
 export const signin = user => {
   return fetch(`${API}/signin`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(user),
-  })
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
+    })
     .then(response => {
       return response.json();
     })
+    .catch(err => console.log(err));
+};
+
+export const signout = next => {
+  removeCookie('token');
+  removeLocalStorage('token');
+  next();
+
+  return fetch(`${API}/signout`, {
+      method: 'GET',
+    })
+    .then(response => console.log('signout success'))
     .catch(err => console.log(err));
 };
 
@@ -52,7 +66,7 @@ export const removeCookie = key => {
 // get cookie
 export const getCookie = key => {
   if (process.browser) {
-    cookie.get(key);
+    return cookie.get(key);
   }
 };
 
