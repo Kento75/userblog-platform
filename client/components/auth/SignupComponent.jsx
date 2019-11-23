@@ -45,6 +45,8 @@ const SignupComponent = () => {
         });
       }
     });
+
+    Router.replace(`/signin`);
   };
 
   const handleChange = name => e => {

@@ -32,7 +32,13 @@ const SigninComponent = () => {
         // save user info to localstorage
         // authenticate user
         authenticate(data, () => {
-          Router.push(`/`);
+          // 管理者の場合
+          if (isAuth() && data.user.role === 1) {
+            Router.push(`/admin`);
+          } else {
+            // 一般の場合
+            Router.push(`/user`);
+          }
         });
       }
     });
