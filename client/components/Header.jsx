@@ -1,5 +1,8 @@
 import {useState} from 'react';
 import {APP_NAME} from '../config';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import NProgress from 'nprogress';
+import '../node_modules/nprogress/nprogress.css';
 import {signout, isAuth} from '../actions/auth';
 import Link from 'next/link';
 import {
@@ -16,6 +19,12 @@ import {
   DropdownItem,
 } from 'reactstrap';
 import Router from 'next/router';
+
+NProgress.configure({showSpinner: false, easing: 'ease', speed: 500});
+// https://nextjs.org/docs#router-events
+Router.events.on('routeChangeStart', url => NProgress.start());
+Router.events.on('routeChangeComplete', url => NProgress.done());
+Router.events.on('routeChangeError', url => NProgress.done());
 
 const Header = () => {
   console.log(APP_NAME);

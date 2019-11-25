@@ -12,9 +12,12 @@
   "author": "kento75 <kento2github@gmail.com> (https://overreact.tk)",
   "license": "ISC",
   "dependencies": {
+    "@zeit/next-css": "^1.0.1",
+    "bootstrap": "^4.3.1",
     "isomorphic-fetch": "^2.2.1",
     "js-cookie": "^2.2.1",
     "next": "^9.1.4",
+    "nprogress": "^0.2.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "reactstrap": "^8.1.1"

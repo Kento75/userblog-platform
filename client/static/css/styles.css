@@ -1,0 +1,6 @@
+/* next-css
+   static css
+*/
+#nprogress .bar {
+    height: 10px !important;
+}
