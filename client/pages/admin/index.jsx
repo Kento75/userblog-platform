@@ -13,10 +13,15 @@ const AdminIndex = () => {
             </div>
             {/* https://www.w3schools.com/bootstrap4/bootstrap_list_groups.asp */}
             <div className="col-md-4">
-              <ul class="list-group">
-                <li class="list-group-item list-group-item-action">
+              <ul className="list-group">
+                <li className="list-group-item list-group-item-action">
                   <Link href="/admin/crud/category-tag">
                     <a>Create Category</a>
+                  </Link>
+                </li>
+                <li className="list-group-item list-group-item-action">
+                  <Link href="/admin/crud/category-tag">
+                    <a>Create Tag</a>
                   </Link>
                 </li>
               </ul>
