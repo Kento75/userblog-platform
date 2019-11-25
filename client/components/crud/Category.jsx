@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
 import {isAuth, getCookie} from '../../actions/auth';
-import {create} from '../../actions/category';
+import {create, getCategories, removeCategory} from '../../actions/category';
 
 const Category = () => {
   const [values, setValues] = useState({
@@ -11,10 +11,35 @@ const Category = () => {
     success: false,
     categories: [],
     removed: false,
+    reload: false,
   });
 
-  const {name, error, success, categories, removed} = values;
+  const {name, error, success, categories, removed, reload} = values;
   const token = getCookie('token');
+
+  useEffect(() => {
+    loadCategories();
+  }, [reload]);
+
+  const loadCategories = () => {
+    getCategories().then(data => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        setValues({...values, categories: data});
+      }
+    });
+  };
+
+  const showCategories = () => {
+    return categories.map((category, index) => {
+      return (
+        <button key={index} className="btn btn-outline-primary mr-1 ml-1 mt-3">
+          {category.name}
+        </button>
+      );
+    });
+  };
 
   const clickSubmit = e => {
     e.preventDefault();
@@ -22,7 +47,13 @@ const Category = () => {
       if (data.error) {
         setValues({...values, error: data.error, success: false});
       } else {
-        setValues({...values, error: false, success: true, name: ''});
+        setValues({
+          ...values,
+          error: false,
+          success: true,
+          name: '',
+          reload: !reload,
+        });
       }
     });
   };
@@ -57,7 +88,12 @@ const Category = () => {
     </form>
   );
 
-  return <React.Fragment>{newCategoryForm()}</React.Fragment>;
+  return (
+    <React.Fragment>
+      {newCategoryForm()}
+      <div>{showCategories()}</div>
+    </React.Fragment>
+  );
 };
 
 export default Category;
