@@ -42,7 +42,7 @@ exports.read = (req, res) => {
   const slug = req.params.slug.toLowerCase();
 
   Tag.findOne({
-    slug
+    name: slug
   }).exec((err, tag) => {
     if (err) {
       return res.status(400).json({
@@ -57,7 +57,7 @@ exports.remove = (req, res) => {
   const slug = req.params.slug.toLowerCase();
 
   Tag.findOneAndRemove({
-    slug
+    name: slug
   }).exec((err, tag) => {
     if (err) {
       return res.status(400).json({

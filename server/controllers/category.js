@@ -41,9 +41,7 @@ exports.list = (req, res) => {
 exports.read = (req, res) => {
   const slug = req.params.slug.toLowerCase();
 
-  Category.findOne({
-    slug
-  }).exec((err, category) => {
+  Category.findOne({}).exec((err, category) => {
     if (err) {
       return res.status(400).json({
         error: errorHandler(err)
@@ -57,7 +55,7 @@ exports.remove = (req, res) => {
   const slug = req.params.slug.toLowerCase();
 
   Category.findOneAndRemove({
-    slug
+    name: slug
   }).exec((err, category) => {
     if (err) {
       return res.status(400).json({
