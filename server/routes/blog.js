@@ -1,9 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const {
-    time
+    requireSiginin,
+    adminMiddleware,
+} = require("../controllers/auth.js");
+const {
+    create
 } = require("../controllers/blog.js");
 
-router.get("/", time);
+router.post("/blog", requireSiginin, adminMiddleware, create);
 
 module.exports = router;
