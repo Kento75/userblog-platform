@@ -11,6 +11,9 @@ const Tag = require("../models/tag.js");
 const {
     errorHandler
 } = require("../helpers/dbErrorHandler.js");
+const {
+    smartTrim
+} = require("../helpers/blog.js");
 
 exports.create = (req, res) => {
     let form = new formidable.IncomingForm();
@@ -52,18 +55,11 @@ exports.create = (req, res) => {
                 error: "At least one tag is required"
             });
         }
-
-        let blog = new Blog();
-        blog.title = title;
-        blog.body = body;
-        blog.slug = slugify(title).toLowerCase();
-        blog.mtitle = `${title} | ${process.env.APP_NAME}`;
-        blog.mdesc = stripHtml(body.substring(0, 160));
-        blog.postedBy = req.user._id;
-
-        // categories an tags
-        let arrayOfCategories = categories && categories.split(",");
-        let arrayOfTags = tags && tags.split(",");
+        if (typeof files.photo === "undefined" || typeof files.photo.path === "undefined") {
+            return res.status(400).json({
+                error: "Image is required"
+            });
+        }
 
         // イメージが大きすぎる場合
         if (files.photo) {
@@ -73,6 +69,19 @@ exports.create = (req, res) => {
                 });
             }
         }
+
+        let blog = new Blog();
+        blog.title = title;
+        blog.body = body;
+        blog.excerpt = smartTrim(body, 320, " ", "...");
+        blog.slug = slugify(title).toLowerCase();
+        blog.mtitle = `${title} | ${process.env.APP_NAME}`;
+        blog.mdesc = stripHtml(body.substring(0, 160));
+        blog.postedBy = req.user._id;
+
+        // categories an tags
+        let arrayOfCategories = categories && categories.split(",");
+        let arrayOfTags = tags && tags.split(",");
 
         blog.photo.data = fs.readFileSync(files.photo.path);
         blog.photo.contentType = files.photo.type;
