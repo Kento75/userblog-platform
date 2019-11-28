@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Router, {withRouter} from 'next/router';
 import dynamic from 'next/dynamic';
 import {getCookie, isAuth} from '../../actions/auth';
+import {getCategories} from '../../actions/category';
 import {getTags} from '../../actions/tag';
 import {createBlog} from '../../actions/blog';
 
@@ -17,6 +18,11 @@ const CreateBlog = ({router}) => {
     typeof window !== 'undefined' && localStorage.getItem('blog')
       ? JSON.parse(localStorage.getItem('blog'))
       : false;
+
+  const [categories, setCategories] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [checkedCategory, setCheckedCategory] = useState([]); // categories
+  const [checkedTag, setCheckedTag] = useState([]); //tags
 
   const [body, setBody] = useState(blogFromLS());
   const [values, setValues] = useState({
@@ -39,7 +45,31 @@ const CreateBlog = ({router}) => {
 
   useEffect(() => {
     setValues({...values, formData: new FormData()});
+    initCategories();
+    initTags();
   }, [router]);
+
+  // カテゴリ一覧取得
+  const initCategories = () => {
+    getCategories().then(data => {
+      if (data.error) {
+        setValues({...values, error: data.error});
+      } else {
+        setCategories(data);
+      }
+    });
+  };
+
+  // タグ一覧取得
+  const initTags = () => {
+    getTags().then(data => {
+      if (data.error) {
+        setValues({...values, error: data.error});
+      } else {
+        setTags(data);
+      }
+    });
+  };
 
   const publishBlog = e => {
     e.preventDefault();
@@ -60,6 +90,72 @@ const CreateBlog = ({router}) => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('blog', JSON.stringify(e));
     }
+  };
+
+  // カテゴリ一覧表示コンポーネント
+  const showCategories = () => {
+    return (
+      categories &&
+      categories.map((category, index) => (
+        <li key={index} className="list-unstyled">
+          <input
+            onChange={handleToggleCategory(category._id)}
+            type="checkbox"
+            className="mr-2"
+          />
+          <label className="form-check-label">{category.name}</label>
+        </li>
+      ))
+    );
+  };
+
+  // タグ一覧表示コンポーネント
+  const showTags = () => {
+    return (
+      tags &&
+      tags.map((tag, index) => (
+        <li key={index} className="list-unstyled">
+          <input
+            onChange={handleToggleTag(tag._id)}
+            type="checkbox"
+            className="mr-2"
+          />
+          <label className="form-check-label">{tag.name}</label>
+        </li>
+      ))
+    );
+  };
+
+  // カテゴリトグル
+  const handleToggleCategory = c => () => {
+    setValues({...values, error: ''});
+    // return thhe first index or -1
+    const clickedCategory = checkedCategory.indexOf(c);
+    const all = [...checkedCategory];
+
+    if (clickedCategory === -1) {
+      all.push(c);
+    } else {
+      all.splice(clickedCategory, 1);
+    }
+    setCheckedCategory(all);
+    formData.set('categories', all);
+  };
+
+  // タグトグル
+  const handleToggleTag = t => () => {
+    setValues({...values, error: ''});
+    // return thhe first index or -1
+    const clickedTag = checkedTag.indexOf(t);
+    const all = [...checkedTag];
+
+    if (clickedTag === -1) {
+      all.push(t);
+    } else {
+      all.splice(clickedTag, 1);
+    }
+    setCheckedTag(all);
+    formData.set('tags', all);
   };
 
   const createBlogForm = () => {
@@ -93,12 +189,32 @@ const CreateBlog = ({router}) => {
   };
 
   return (
-    <div>
-      {createBlogForm()}
-      <hr />
-      {JSON.stringify(title)}
-      <hr />
-      {JSON.stringify(body)}
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-md-8">
+          {createBlogForm()}
+          <hr />
+          {JSON.stringify(title)}
+          <hr />
+          {JSON.stringify(body)}
+          <hr />
+          {JSON.stringify(categories)}
+          <hr />
+          {JSON.stringify(tags)}
+        </div>
+        <div className="col-md-4">
+          <h5>Categories</h5>
+          <hr />
+          <ul style={{maxHeight: '200px', overflowY: 'scroll'}}>
+            {showCategories()}
+          </ul>
+          <h5>Tags</h5>
+          <hr />
+          <ul style={{maxHeight: '200px', overflowY: 'scroll'}}>
+            {showTags()}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 };
