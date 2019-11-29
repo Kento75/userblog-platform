@@ -10,7 +10,8 @@ const {
     listAllBlogsCategoriesTags,
     read,
     remove,
-    update
+    update,
+    photo
 } = require("../controllers/blog.js");
 
 router.post("/blog", requireSiginin, adminMiddleware, create);
@@ -19,5 +20,6 @@ router.get("/blogs-categories-tags", listAllBlogsCategoriesTags);
 router.get("/blog/:slug", read);
 router.delete("/blog/:slug", requireSiginin, adminMiddleware, remove);
 router.put("/blog/:slug", requireSiginin, adminMiddleware, update);
+router.get("/blog/photo/:slug", photo);
 
 module.exports = router;
