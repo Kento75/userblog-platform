@@ -10,7 +10,6 @@ import {createBlog} from '../../actions/blog';
 // react-quill エディタを簡単に実装できる便利なやつ
 // Repository -> https://github.com/zenoamaro/react-quill
 const ReactQuill = dynamic(() => import('react-quill'), {ssr: false});
-import 'react-quill/dist/quill.snow.css';
 
 const CreateBlog = ({router}) => {
   // localStorageに下書きがある場合表示
@@ -99,7 +98,7 @@ const CreateBlog = ({router}) => {
       categories.map((category, index) => (
         <li key={index} className="list-unstyled">
           <input
-            onChange={handleToggleCategory(category._id)}
+            onChange={handleCategoriesToggle(category._id)}
             type="checkbox"
             className="mr-2"
           />
@@ -116,7 +115,7 @@ const CreateBlog = ({router}) => {
       tags.map((tag, index) => (
         <li key={index} className="list-unstyled">
           <input
-            onChange={handleToggleTag(tag._id)}
+            onChange={handleTagsToggle(tag._id)}
             type="checkbox"
             className="mr-2"
           />
@@ -127,7 +126,7 @@ const CreateBlog = ({router}) => {
   };
 
   // カテゴリトグル
-  const handleToggleCategory = c => () => {
+  const handleCategoriesToggle = c => () => {
     setValues({...values, error: ''});
     // return thhe first index or -1
     const clickedCategory = checkedCategory.indexOf(c);
@@ -143,7 +142,7 @@ const CreateBlog = ({router}) => {
   };
 
   // タグトグル
-  const handleToggleTag = t => () => {
+  const handleTagsToggle = t => () => {
     setValues({...values, error: ''});
     // return thhe first index or -1
     const clickedTag = checkedTag.indexOf(t);

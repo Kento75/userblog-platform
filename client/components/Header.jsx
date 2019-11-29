@@ -3,6 +3,7 @@ import {APP_NAME} from '../config';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import NProgress from 'nprogress';
 import '../node_modules/nprogress/nprogress.css';
+import 'react-quill/dist/quill.snow.css';
 import {signout, isAuth} from '../actions/auth';
 import Link from 'next/link';
 import {
