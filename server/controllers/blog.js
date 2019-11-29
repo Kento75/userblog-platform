@@ -125,3 +125,79 @@ exports.create = (req, res) => {
         });
     })
 };
+
+exports.list = (req, res) => {
+    Blog.find({})
+        .populate("categories", "_id name slug") // これでjoinできる(category)
+        .populate("tags", "_id name slug") // これでjoinできる(tag)
+        .populate("postedBy", "_id name username") // これでjoinできる(author)
+        .select("_id title slug excerpt categories tags postedBy createdAt updatedAt")
+        .exec((err, data) => {
+            if (err) {
+                return res.json({
+                    error: errorHandler(err)
+                });
+            }
+            res.json(data);
+        });
+}
+exports.listAllBlogsCategoriesTags = (req, res) => {
+    // レスポンスするレコードの上限
+    let limit = req.body.limit ? parseInt(req.body.limit) : 10;
+    // 検索From
+    let skip = req.body.skip ? parseInt(req.body.skip) : 0;
+    let blogs;
+    let categories;
+    let tags;
+
+    Blog.find({})
+        .populate("categories", "_id name slug") // これでjoinできる(category)
+        .populate("tags", "_id name slug") // これでjoinできる(tag)
+        .sort({
+            createdAt: -1 // 降順
+        })
+        .skip(skip) // 指定したレコード以降
+        .limit(limit) // レスポンスするレコードの上限
+        .select("_id title slug excerpt categories tags postedBy createdAt updatedAt")
+        .exec((err, data) => {
+            if (err) {
+                return (
+                    res.json({
+                        error: errorHandler(err)
+                    })
+                );
+            }
+            blogs = data;
+            Category.find({}).exec((err, q_categories) => {
+                if (err) {
+                    return (
+                        res.json({
+                            error: errorHandler(err)
+                        })
+                    );
+                }
+                categories = q_categories;
+                Tag.find({}).exec((err, q_tags) => {
+                    if (err) {
+                        return (
+                            res.json({
+                                error: errorHandler(err)
+                            })
+                        );
+                    }
+                    tags = q_tags;
+
+                    res.json({
+                        blogs,
+                        categories,
+                        tags,
+                        size: blogs.length
+                    });
+                })
+            });
+        })
+}
+
+exports.read = (req, res) => {}
+exports.remove = (req, res) => {}
+exports.update = (req, res) => {}
