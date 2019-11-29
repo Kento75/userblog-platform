@@ -6,10 +6,9 @@ import {
 
 export const createBlog = (blog, token) => {
   return fetch(`${API}/blog`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        Accept: 'application/json',
         Authorization: `Bearer ${token}`
       },
       body: blog
@@ -17,5 +16,5 @@ export const createBlog = (blog, token) => {
     .then(response => {
       return response.json();
     })
-    .catch(err => console.log(err))
+    .catch(err => console.log(err));
 };

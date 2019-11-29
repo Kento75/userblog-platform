@@ -28,7 +28,11 @@ mongoose.connect(db_url, {
 
 //// middlewares
 app.use(morgan("dev"));
-app.use(bodyParser.json());
+// limit => 50MBに変更（デフォルト 100KB）
+app.use(bodyParser.json({
+  limit: '50mb',
+  extended: true
+}));
 app.use(cookieParser());
 // cors
 if (process.env.NODE_ENV == "development") {
