@@ -126,6 +126,7 @@ exports.create = (req, res) => {
     })
 };
 
+
 exports.list = (req, res) => {
     Blog.find({})
         .populate("categories", "_id name slug") // これでjoinできる(category)
@@ -233,4 +234,110 @@ exports.remove = (req, res) => {
     })
 }
 
-exports.update = (req, res) => {}
+exports.update = (req, res) => {
+    const slug = req.body.slug;
+
+    Blog.findOne({
+        slug
+    }).exec((err, oldBlog) => {
+        if (err) {
+            return res.json({
+                error: errorHandler(err)
+            })
+        }
+        let form = new formidable.IncomingForm();
+        form.keepExtensions = true;
+
+        form.parse(req, (err, fields, files) => {
+            if (err) {
+                return res.status(400).json({
+                    error: "Image could not upload"
+                });
+            }
+
+            let slugBeforeMerge = oldBlog.slug;
+            oldBlog = _.merge(oldBlog, fields);
+            oldBlog.slug = slugBeforeMerge;
+
+            const {
+                body,
+                desc,
+                categories,
+                tags
+            } = fields;
+
+            // excerpt、desc更新
+            if (body) {
+                oldBlog.excerpt = smartTrim(body, 320, " ", "...");
+                oldBlog.desc = stripHtml(body.substring(0, 160));
+            }
+
+            // categories更新
+            if (categories) {
+                oldBlog.categories = categories.split(",");
+            }
+
+            // tags更新
+            if (tags) {
+                oldBlog.tags = tags.split(",");
+            }
+
+            // validators
+            if (typeof oldBlog.files.photo === "undefined" || typeof oldBlog.files.photo.path === "undefined") {
+                return res.status(400).json({
+                    error: "Image is required"
+                });
+            }
+
+            if (!oldBlog.title || !oldBlog.title.length) {
+                return res.status(400).json({
+                    error: "title is required"
+                });
+            }
+
+            if (!oldBlog.body || oldBlog.body.length < 200) {
+                return res.status(400).json({
+                    error: "Content is to short"
+                });
+            }
+
+            if (!oldBlog.categories || oldBlog.categories.length === 0) {
+                return res.status(400).json({
+                    error: "At least one category is required"
+                });
+            }
+
+            if (!oldBlog.tags || oldBlog.tags.length === 0) {
+                return res.status(400).json({
+                    error: "At least one tag is required"
+                });
+            }
+            if (typeof oldBlog.files.photo === "undefined" || typeof oldBlog.files.photo.path === "undefined") {
+                return res.status(400).json({
+                    error: "Image is required"
+                });
+            }
+
+            // イメージが大きすぎる場合
+            if (oldBlog.files.photo) {
+                if (oldBlog.files.photo.size > 10000000) {
+                    return res.status(400).json({
+                        error: "Image should be less then 1mb in size"
+                    });
+                }
+
+                oldBlog.photo.data = fs.readFileSync(files.photo.path);
+                oldBlog.photo.contentType = files.photo.type;
+            }
+
+            oldBlog.save((err, result) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: errorHandler(err)
+                    });
+                }
+                res.json(result);
+            });
+        })
+    })
+};
