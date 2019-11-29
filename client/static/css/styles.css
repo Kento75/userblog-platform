@@ -4,3 +4,8 @@
 #nprogress .bar {
     height: 10px !important;
 }
+
+/* react-quill */
+.ql-editor {
+    min-height: 300px;
+}

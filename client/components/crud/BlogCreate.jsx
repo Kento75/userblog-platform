@@ -6,6 +6,7 @@ import {getCookie, isAuth} from '../../actions/auth';
 import {getCategories} from '../../actions/category';
 import {getTags} from '../../actions/tag';
 import {createBlog} from '../../actions/blog';
+import {QuillFormats, QuillModules} from '../../helpers/quill';
 
 // react-quill エディタを簡単に実装できる便利なやつ
 // Repository -> https://github.com/zenoamaro/react-quill
@@ -83,9 +84,13 @@ const CreateBlog = ({router}) => {
           error: '',
           success: `A new blog titled "${data.title}" is created`,
         });
+        // リセット
         setBody('');
         setCategories([]);
         setTags([]);
+        // タグとカテゴリの再取得
+        initCategories();
+        initTags();
       }
     });
   };
@@ -172,6 +177,21 @@ const CreateBlog = ({router}) => {
     formData.set('tags', all);
   };
 
+  const showError = () => (
+    <div className="alert alert-danger" style={{display: error ? '' : 'none'}}>
+      {error}
+    </div>
+  );
+
+  const showSuccess = () => (
+    <div
+      className="alert alert-success"
+      style={{display: success ? '' : 'none'}}
+    >
+      {success}
+    </div>
+  );
+
   const createBlogForm = () => {
     return (
       <form onSubmit={publishBlog}>
@@ -186,8 +206,8 @@ const CreateBlog = ({router}) => {
         </div>
         <div className="form-group">
           <ReactQuill
-            modules={CreateBlog.modules}
-            formats={CreateBlog.formats}
+            modules={QuillModules}
+            formats={QuillFormats}
             value={body}
             placeholder="Write something amazing ..."
             onChange={handleBody}
@@ -207,14 +227,10 @@ const CreateBlog = ({router}) => {
       <div className="row">
         <div className="col-md-8">
           {createBlogForm()}
-          <hr />
-          {JSON.stringify(title)}
-          <hr />
-          {JSON.stringify(body)}
-          <hr />
-          {JSON.stringify(categories)}
-          <hr />
-          {JSON.stringify(tags)}
+          <div className="pt-3">
+            {showError()}
+            {showSuccess()}
+          </div>
         </div>
         <div className="col-md-4">
           <div className="form-group pb-2">
@@ -247,34 +263,5 @@ const CreateBlog = ({router}) => {
     </div>
   );
 };
-
-CreateBlog.modules = {
-  toolbar: [
-    [{header: '1'}, {header: '2'}, {header: [3, 4, 5, 6]}, {font: []}],
-    [{size: []}],
-    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-    [{list: 'ordered'}, {list: 'bullet'}],
-    ['link', 'image', 'video'], // イメージ挿入を可能にする
-    ['clean'],
-    ['code-block'],
-  ],
-};
-
-CreateBlog.formats = [
-  'header',
-  'font',
-  'size',
-  'bold',
-  'italic',
-  'underline',
-  'strike',
-  'blockquote',
-  'list',
-  'bullet',
-  'link',
-  'image',
-  'video',
-  'code-block',
-];
 
 export default withRouter(CreateBlog);
