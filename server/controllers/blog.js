@@ -198,6 +198,39 @@ exports.listAllBlogsCategoriesTags = (req, res) => {
         })
 }
 
-exports.read = (req, res) => {}
-exports.remove = (req, res) => {}
+exports.read = (req, res) => {
+    const slug = req.body.slug.toLowerCase();
+    Blog.findOne({
+            slug: slug
+        })
+        .populate("categories", "_id name slug") // これでjoinできる(category)
+        .populate("tags", "_id name slug") // これでjoinできる(tag)
+        .populate("postedBy", "_id name username") // これでjoinできる(author)
+        .select("_id title body slug mtitle mdesc categories tags postedBy createdAt updatedAt")
+        .exec((err, data) => {
+            if (err) {
+                return res.json({
+                    error: errorHandler(err)
+                })
+            };
+            res.json(data);
+        });
+}
+
+exports.remove = (req, res) => {
+    const slug = req.body.slug.toLowerCase();
+    Blog.findOneAndRemove({
+        slug: slug
+    }).exec((err, data) => {
+        if (err) {
+            return res.json({
+                error: errorHandler(err)
+            });
+        }
+        res.json({
+            message: "Blog deleted successfully"
+        });
+    })
+}
+
 exports.update = (req, res) => {}
