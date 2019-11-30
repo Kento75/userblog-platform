@@ -345,7 +345,7 @@ exports.update = (req, res) => {
 };
 
 exports.photo = (req, res) => {
-    const slug = req.body.slug.toLowerCase();
+    const slug = req.params.slug.toLowerCase();
     Blog.findOne({
             slug: slug
         })

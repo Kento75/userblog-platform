@@ -4,6 +4,8 @@ import dayjs from 'dayjs';
 // import 'dayjs/locale/ja';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
+import {API} from '../../config';
+
 // dayjs settings
 // dayjs.locale('ja');
 dayjs.extend(relativeTime);
@@ -41,14 +43,23 @@ const Card = ({blog}) => {
           {dayjs(blog.updatedAt).fromNow()}
         </p>
       </section>
-      <section>
+      <section className="pb-4">
         {showBlogCategories(blog)}
         {showBlogTags(blog)}
         <br />
       </section>
 
       <div className="row">
-        <div className="col-md-4">image</div>
+        <div className="col-md-4">
+          <section>
+            <img
+              src={`${API}/blog/photo/${blog.slug}`}
+              alt={blog.title}
+              style={{maxHeight: '150px'}}
+              className="mw-100 mh-100 img img-fluid"
+            />
+          </section>
+        </div>
         <div className="col-md-8">
           <section>
             <div className="pb-3 text-break">{renderHTML(blog.excerpt)}</div>

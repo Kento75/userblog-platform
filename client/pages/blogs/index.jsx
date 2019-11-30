@@ -5,7 +5,6 @@ import Card from '../../components/blog/Card';
 
 import Layout from '../../components/Layout';
 import {listBlogsWithCategoriesAndTags} from '../../actions/blog';
-import {API} from '../../config';
 
 const Blogs = ({blogs, categories, tags, size}) => {
   const showAllBlogs = () => {
