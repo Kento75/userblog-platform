@@ -364,29 +364,35 @@ exports.photo = (req, res) => {
 
 exports.listRelated = (req, res) => {
     let limit = req.body.limit ? parseInt(req.body.limit) : 3;
-
     const {
-        _id, // blog id
-        categories // 関連タグ
-    } = req.body;
+        _id,
+        categories
+    } = req.body.blog;
 
-    // 関連するブログを検索
+    // _id以外の要素を除外して [...] に変更する
+    arrayCategories = _.chain(categories)
+        .map('_id')
+        .flatten()
+        .value();
+
     Blog.find({
             _id: {
-                $ne: _id // 開いているブログは含まない
+                $ne: _id
             },
             categories: {
-                $in: categories // 開いているブログのタグを含む
+                $in: arrayCategories
             }
         })
         .limit(limit)
-        .populate("postedBy", "_id name profile").select("title slug excerpt postedBy createdAt updatedAt")
+        .populate('postedBy', '_id name username profile')
+        .select('title slug excerpt postedBy createdAt updatedAt')
         .exec((err, blogs) => {
+            console.log(blogs)
             if (err) {
                 return res.status(400).json({
-                    error: "Blogs not found"
+                    error: 'Blogs not found'
                 });
             }
             res.json(blogs);
         });
-}
+};

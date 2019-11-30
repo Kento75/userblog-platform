@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import {withRouter} from 'next/router';
@@ -8,12 +8,28 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
 import Layout from '../../components/Layout';
-import {singleBlog} from '../../actions/blog';
+import {singleBlog, listRelated} from '../../actions/blog';
 import {API, DOMAIN, APP_NAME, FB_APP_ID} from '../../config';
 
 dayjs.extend(relativeTime);
 
 const SingleBlog = ({query, blog}) => {
+  const [related, setRelated] = useState([]);
+
+  const loadRelated = () => {
+    listRelated({blog}).then(data => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        setRelated(data);
+      }
+    });
+  };
+
+  useEffect(() => {
+    loadRelated();
+  }, []);
+
   // SEO Header
   const head = () => (
     <Head>
@@ -102,7 +118,7 @@ const SingleBlog = ({query, blog}) => {
             <div className="container pb-5">
               <h4 className="text-center pt-5 pb-5 h2">Related blogs</h4>
               <hr />
-              <p>show related blogs</p>
+              {JSON.stringify(related)}
             </div>
 
             <div className="container pb-5">

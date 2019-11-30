@@ -22,6 +22,6 @@ router.get("/blog/:slug", read);
 router.delete("/blog/:slug", requireSiginin, adminMiddleware, remove);
 router.put("/blog/:slug", requireSiginin, adminMiddleware, update);
 router.get("/blog/photo/:slug", photo);
-router.post("/blog/related", listRelated);
+router.post("/blogs/related", listRelated);
 
 module.exports = router;
