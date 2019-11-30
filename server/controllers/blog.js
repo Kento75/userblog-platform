@@ -361,3 +361,32 @@ exports.photo = (req, res) => {
             return res.send(blog.photo.data);
         })
 }
+
+exports.listRelated = (req, res) => {
+    let limit = req.body.limit ? parseInt(req.body.limit) : 3;
+
+    const {
+        _id, // blog id
+        categories // 関連タグ
+    } = req.body;
+
+    // 関連するブログを検索
+    Blog.find({
+            _id: {
+                $ne: _id // 開いているブログは含まない
+            },
+            categories: {
+                $in: categories // 開いているブログのタグを含む
+            }
+        })
+        .limit(limit)
+        .populate("postedBy", "_id name profile").select("title slug excerpt postedBy createdAt updatedAt")
+        .exec((err, blogs) => {
+            if (err) {
+                return res.status(400).json({
+                    error: "Blogs not found"
+                });
+            }
+            res.json(blogs);
+        });
+}
