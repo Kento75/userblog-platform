@@ -108,7 +108,7 @@ export const removeBlog = (slug, token) => {
  * @param  {} token
  * @param  {} slug
  */
-export const createBlog = (blog, token, slug) => {
+export const updateBlog = (blog, token, slug) => {
   return fetch(`${API}/blog/${slug}`, {
       method: 'PUT',
       headers: {
