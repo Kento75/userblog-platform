@@ -18,11 +18,6 @@ const Blogs = ({
   blogsSkip,
   router,
 }) => {
-  const [limit, setLimit] = useState(blogsLimit);
-  const [skip, setSkip] = useState(0);
-  const [size, setSize] = useState(totalBlogs);
-  const [loadedBlogs, setLoadedBlogs] = useState([]);
-
   // SEO Header
   const head = () => (
     <Head>
@@ -56,6 +51,35 @@ const Blogs = ({
     </Head>
   );
 
+  const [limit, setLimit] = useState(blogsLimit);
+  const [skip, setSkip] = useState(0);
+  const [size, setSize] = useState(totalBlogs);
+  const [loadedBlogs, setLoadedBlogs] = useState([]);
+
+  const loadMore = () => {
+    let toSkip = skip + limit;
+    listBlogsWithCategoriesAndTags(toSkip, limit).then(data => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        setLoadedBlogs([...loadedBlogs, ...data.blogs]);
+        setSize(data.size);
+        setSkip(toSkip);
+      }
+    });
+  };
+
+  const loadMoreButton = () => {
+    return (
+      size > 0 &&
+      size >= limit && (
+        <button onClick={loadMore} className="btn btn-outline-primary btn-lg">
+          Load More
+        </button>
+      )
+    );
+  };
+
   const showAllCategories = () =>
     categories.map((category, index) => (
       <Link key={index} href={`/categories/${category.slug}`}>
@@ -70,6 +94,7 @@ const Blogs = ({
       </Link>
     ));
 
+  // 初回表示分のブログ
   const showAllBlogs = () => {
     return blogs.map((blog, index) => {
       return (
@@ -79,6 +104,15 @@ const Blogs = ({
         </article>
       );
     });
+  };
+
+  // 追加読み込み実行時のブログ
+  const showLoadedBlogs = () => {
+    return loadedBlogs.map((blog, index) => (
+      <article key={index}>
+        <Card blog={blog} />
+      </article>
+    ));
   };
 
   return (
@@ -102,11 +136,9 @@ const Blogs = ({
               </section>
             </header>
           </div>
-          <div className="container-fluid">
-            <div className="row">
-              <div className="col-md-12">{showAllBlogs()}</div>
-            </div>
-          </div>
+          <div className="container-fluid">{showAllBlogs()}</div>
+          <div className="container-fluid">{showLoadedBlogs()}</div>
+          <div className="text-center pt-5 pb-5">{loadMoreButton()}</div>
         </main>
       </Layout>
     </React.Fragment>
