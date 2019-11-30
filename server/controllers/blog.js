@@ -220,7 +220,7 @@ exports.read = (req, res) => {
 }
 
 exports.remove = (req, res) => {
-    const slug = req.body.slug.toLowerCase();
+    const slug = req.params.slug.toLowerCase();
     Blog.findOneAndRemove({
         slug: slug
     }).exec((err, data) => {
