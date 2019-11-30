@@ -13,7 +13,31 @@ import {API, DOMAIN, APP_NAME, FB_APP_ID} from '../../config';
 
 dayjs.extend(relativeTime);
 
-const SingleBlog = ({router, blog}) => {
+const SingleBlog = ({query, blog}) => {
+  // SEO Header
+  const head = () => (
+    <Head>
+      <title>
+        {blog.title} | {APP_NAME}
+      </title>
+      <meta name="description" content={blog.mdesc} />
+
+      <link rel="canonical" href={`${DOMAIN}/blogs/${query.slug}`} />
+
+      <meta property="og:title" content={`${blog.title} | ${APP_NAME}`} />
+      <meta property="og:description" content={`${blog.mdesc}`} />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content={`${DOMAIN}/blogs/${query.slug}`} />
+      <meta property="og:site_name" content={`${DOMAIN}`} />
+
+      <meta property="og:image" content={`${API}/blog/photo/${blog.slug}`} />
+      <meta property="og:image:secure_url" content={`${DOMAIN}`} />
+      {/* TODO: ↓ よく考えたらpng以外の場合もあるのでここあとで修正したい */}
+      {/* <meta property="og:image:type" content="image/png" /> */}
+      <meta property="fb:app_id" content={`${FB_APP_ID}`} />
+    </Head>
+  );
+
   const showBlogCategories = blog =>
     blog.categories.map((category, index) => (
       <Link key={index} href={`/categories/${category.slug}`}>
@@ -30,12 +54,18 @@ const SingleBlog = ({router, blog}) => {
 
   return (
     <React.Fragment>
+      {head()}
       <Layout>
         <main>
           <article>
             <div className="container-fluid text-break">
               <section>
-                <div className="row" style={{marginTop: '-30px'}}>
+                <div
+                  className="row"
+                  style={{
+                    marginTop: '-30px',
+                  }}
+                >
                   <img
                     src={`${API}/blog/photo/${blog.slug}`}
                     alt={blog.title}
@@ -45,15 +75,20 @@ const SingleBlog = ({router, blog}) => {
               </section>
 
               <section>
-                <p className="lead mt-3 mark">
-                  Written by {blog.postedBy.name} || Published{' '}
-                  {dayjs(blog.updatedAt).fromNow()}
-                </p>
-                <div className="pb-3">
-                  {showBlogCategories(blog)}
-                  {showBlogTags(blog)}
-                  <br />
-                  <br />
+                <div className="container">
+                  <h1 className="display-2 pt-3 pb-3 text-center font-weight-bold">
+                    {blog.title}
+                  </h1>
+                  <p className="lead mt-3 mark">
+                    Written by {blog.postedBy.name} || Published{' '}
+                    {dayjs(blog.updatedAt).fromNow()}
+                  </p>
+                  <div className="pb-3">
+                    {showBlogCategories(blog)}
+                    {showBlogTags(blog)}
+                    <br />
+                    <br />
+                  </div>
                 </div>
               </section>
             </div>
@@ -85,7 +120,7 @@ SingleBlog.getInitialProps = ({query}) => {
     if (data.error) {
       console.log(data.error);
     } else {
-      return {blog: data};
+      return {blog: data, query};
     }
   });
 };
