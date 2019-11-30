@@ -154,6 +154,7 @@ exports.listAllBlogsCategoriesTags = (req, res) => {
     Blog.find({})
         .populate("categories", "_id name slug") // これでjoinできる(category)
         .populate("tags", "_id name slug") // これでjoinできる(tag)
+        .populate('postedBy', '_id name username profile') // これでjoinできる(author)
         .sort({
             createdAt: -1 // 降順
         })
