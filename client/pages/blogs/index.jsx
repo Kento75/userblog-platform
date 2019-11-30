@@ -7,6 +7,20 @@ import Layout from '../../components/Layout';
 import {listBlogsWithCategoriesAndTags} from '../../actions/blog';
 
 const Blogs = ({blogs, categories, tags, size}) => {
+  const showAllCategories = () =>
+    categories.map((category, index) => (
+      <Link key={index} href={`/categories/${category.slug}`}>
+        <a className="btn btn-primary ml-1 mr-1 mt-3">{category.name}</a>
+      </Link>
+    ));
+
+  const showAllTags = () =>
+    tags.map((tag, index) => (
+      <Link key={index} href={`/tags/${tag.slug}`}>
+        <a className="btn btn-outline-primary ml-1 mr-1 mt-3">{tag.name}</a>
+      </Link>
+    ));
+
   const showAllBlogs = () => {
     return blogs.map((blog, index) => {
       return (
@@ -29,7 +43,11 @@ const Blogs = ({blogs, categories, tags, size}) => {
               </h1>
             </div>
             <section>
-              <p>show categories and tags</p>
+              <div className="pt-5 text-center">
+                {showAllCategories()}
+                <br />
+                {showAllTags()}
+              </div>
             </section>
           </header>
         </div>
