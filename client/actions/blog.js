@@ -22,7 +22,10 @@ export const createBlog = (blog, token) => {
     })
     .catch(err => console.log(err));
 };
-
+/**
+ * @param  {} skip
+ * @param  {} limit
+ */
 export const listBlogsWithCategoriesAndTags = (skip, limit) => {
   const data = {
     limit,
@@ -39,5 +42,16 @@ export const listBlogsWithCategoriesAndTags = (skip, limit) => {
     .then(response => {
       return response.json();
     })
+    .catch(err => console.log(err));
+};
+
+/**
+ * @param  {} slug
+ */
+export const singleBlog = (slug) => {
+  return fetch(`${API}/blog/${slug}`, {
+      method: "GET",
+    })
+    .then(response => response.json())
     .catch(err => console.log(err));
 };
