@@ -28,7 +28,7 @@ const Card = ({blog}) => {
   return (
     <div className="lead pb-4 text-break">
       <header>
-        <Link href={`/blogs.${blog.slug}`}>
+        <Link href={`/blogs/${blog.slug}`}>
           <a>
             <h2 className="display-4 pt-3 pb-3 font-weight-bold">
               {blog.title}
