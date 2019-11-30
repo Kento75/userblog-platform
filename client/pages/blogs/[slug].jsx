@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
 import Layout from '../../components/Layout';
+import SmallCard from '../../components//blog/SmallCard';
 import {singleBlog, listRelated} from '../../actions/blog';
 import {API, DOMAIN, APP_NAME, FB_APP_ID} from '../../config';
 
@@ -68,6 +69,16 @@ const SingleBlog = ({query, blog}) => {
       </Link>
     ));
 
+  const showRelatedBlog = () => {
+    return related.map((blog, index) => (
+      <div key={index} className="col-md-4">
+        <article>
+          <SmallCard blog={blog} />
+        </article>
+      </div>
+    ));
+  };
+
   return (
     <React.Fragment>
       {head()}
@@ -109,16 +120,16 @@ const SingleBlog = ({query, blog}) => {
               </section>
             </div>
 
-            <div className="container">
+            <div className="container  text-break">
               <section>
                 <div className="col-md-12 lead">{renderHTML(blog.body)}</div>
               </section>
             </div>
 
-            <div className="container pb-5">
+            <div className="container">
               <h4 className="text-center pt-5 pb-5 h2">Related blogs</h4>
               <hr />
-              {JSON.stringify(related)}
+              <div className="row">{showRelatedBlog()}</div>
             </div>
 
             <div className="container pb-5">
