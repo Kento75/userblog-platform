@@ -16,7 +16,7 @@ const {
 
 router.post("/blog", requireSiginin, adminMiddleware, create);
 router.get("/blogs", list);
-router.get("/blogs-categories-tags", listAllBlogsCategoriesTags);
+router.post("/blogs-categories-tags", listAllBlogsCategoriesTags);
 router.get("/blog/:slug", read);
 router.delete("/blog/:slug", requireSiginin, adminMiddleware, remove);
 router.put("/blog/:slug", requireSiginin, adminMiddleware, update);

@@ -9,7 +9,20 @@ import Layout from '../../components/Layout';
 import {listBlogsWithCategoriesAndTags} from '../../actions/blog';
 import {API, DOMAIN, APP_NAME, FB_APP_ID} from '../../config';
 
-const Blogs = ({blogs, categories, tags, size, router}) => {
+const Blogs = ({
+  blogs,
+  categories,
+  tags,
+  totalBlogs,
+  blogsLimit,
+  blogsSkip,
+  router,
+}) => {
+  const [limit, setLimit] = useState(blogsLimit);
+  const [skip, setSkip] = useState(0);
+  const [size, setSize] = useState(totalBlogs);
+  const [loadedBlogs, setLoadedBlogs] = useState([]);
+
   // SEO Header
   const head = () => (
     <Head>
@@ -101,7 +114,9 @@ const Blogs = ({blogs, categories, tags, size, router}) => {
 };
 
 Blogs.getInitialProps = () => {
-  return listBlogsWithCategoriesAndTags().then(data => {
+  let skip = 0;
+  let limit = 2;
+  return listBlogsWithCategoriesAndTags(skip, limit).then(data => {
     if (data.error) {
       console.log(data.error);
     } else {
@@ -109,7 +124,9 @@ Blogs.getInitialProps = () => {
         blogs: data.blogs,
         categories: data.categories,
         tags: data.tags,
-        size: data.size,
+        totalBlogs: data.size,
+        blogsLimit: limit,
+        blogsSkip: skip,
       };
     }
   });
