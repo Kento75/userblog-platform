@@ -3,11 +3,77 @@ import Link from 'next/link';
 import Router from 'next/router';
 import {getCookie, isAuth} from '../../actions/auth';
 import {list, removeBlog} from '../../actions/blog';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
 
 const BlogRead = () => {
+  const [blogs, setBlogs] = useState([]);
+  const [message, setMessage] = useState('');
+  const token = getCookie('token');
+
+  useEffect(() => {
+    loadBlogs();
+  }, []);
+
+  const loadBlogs = () => {
+    list().then(data => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        setBlogs(data);
+      }
+    });
+  };
+
+  const deleteBlog = slug => {
+    removeBlog(slug, token).then(data => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        setMessage(data.message);
+        loadBlogs();
+      }
+    });
+  };
+
+  const deleteConfirm = slug => {
+    let answer = window.confirm('Are you sure want to delete your blog?');
+    if (answer) {
+      deleteBlog(slug);
+    }
+  };
+
+  const showAllBlogs = () => {
+    return blogs.map((blog, index) => {
+      return (
+        <div key={index} className="pb-5 text-break">
+          <h3>{blog.title}</h3>
+          <p className="mark">
+            Written by {blog.postedBy.name} | Publish on{' '}
+            {dayjs(blog.updatedAt).fromNow()}
+          </p>
+          <button
+            className="btn btn-sm btn-danger"
+            onClick={() => deleteConfirm(blog.slug)}
+          >
+            Delete
+          </button>
+          <hr />
+        </div>
+      );
+    });
+  };
+
   return (
     <React.Fragment>
-      <p>update delete blogs</p>
+      <div className="row">
+        <div className="col-md-12">
+          {message && <div className="alert alert-warning">{message}</div>}
+          {showAllBlogs()}
+        </div>
+      </div>
     </React.Fragment>
   );
 };
