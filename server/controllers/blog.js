@@ -314,18 +314,14 @@ exports.update = (req, res) => {
                 });
             }
 
-            if (typeof files === "undefined" || typeof files.photo === "undefined" || typeof files.photo.path === "undefined") {
-                return res.status(400).json({
-                    error: "Image is required"
-                });
-            } else {
+            console.log(files.photo)
+
+            if (typeof files.photo !== "undefined") {
                 // イメージが大きすぎる場合
-                if (files.photo) {
-                    if (files.photo.size > 10000000) {
-                        return res.status(400).json({
-                            error: "Image should be less then 1mb in size"
-                        });
-                    }
+                if (files.photo.size > 10000000) {
+                    return res.status(400).json({
+                        error: "Image should be less then 1mb in size"
+                    });
                 }
                 oldBlog.photo.data = fs.readFileSync(files.photo.path);
                 oldBlog.photo.contentType = files.photo.type;

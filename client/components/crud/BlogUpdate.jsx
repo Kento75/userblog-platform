@@ -221,6 +221,20 @@ const BlogUpdate = ({router}) => {
     });
   };
 
+  const showError = () => (
+    <div className="alert alert-danger" style={{display: error ? '' : 'none'}}>
+      {error}
+    </div>
+  );
+  const showSuccess = () => (
+    <div
+      className="alert alert-success"
+      style={{display: success ? '' : 'none'}}
+    >
+      {error}
+    </div>
+  );
+
   const updateBlogForm = () => {
     return (
       <form onSubmit={editBlog}>
@@ -257,11 +271,8 @@ const BlogUpdate = ({router}) => {
         <div className="col-md-8 text-break">
           {updateBlogForm()}
           <div className="pt-3">
-            <p>show success and error msg</p>
-            <hr />
-            {JSON.stringify(categories)}
-            <hr />
-            {JSON.stringify(tags)}
+            {showError()}
+            {showSuccess()}
           </div>
         </div>
 
