@@ -7,7 +7,7 @@ import {getCategories} from '../../actions/category';
 import {getTags} from '../../actions/tag';
 import {singleBlog, updateBlog} from '../../actions/blog';
 import {QuillFormats, QuillModules} from '../../helpers/quill';
-import {DOMAIN} from '../../config';
+import {API} from '../../config';
 
 // react-quill エディタを簡単に実装できる便利なやつ
 // Repository -> https://github.com/zenoamaro/react-quill
@@ -212,10 +212,13 @@ const BlogUpdate = ({router}) => {
 
         // 管理者の場合
         if (isAuth() && isAuth().role === 1) {
-          Router.replace(`/admin/crud/${router.query.slug}`);
+          // Router.replace(`/admin/crud/${router.query.slug}`);
+          Router.replace(`/admin`);
+
           // 一般の場合
         } else if (isAuth() && isAuth().role === 0) {
-          Router.replace(`/user/crud/${router.query.slug}`);
+          // Router.replace(`/user/crud/${router.query.slug}`);
+          Router.replace(`/user`);
         }
       }
     });
@@ -231,7 +234,7 @@ const BlogUpdate = ({router}) => {
       className="alert alert-success"
       style={{display: success ? '' : 'none'}}
     >
-      {error}
+      {success}
     </div>
   );
 
@@ -274,6 +277,13 @@ const BlogUpdate = ({router}) => {
             {showError()}
             {showSuccess()}
           </div>
+          {body && (
+            <img
+              src={`${API}/blog/photo/${router.query.slug}`}
+              alt={title}
+              className="w-100"
+            />
+          )}
         </div>
 
         <div className="col-md-4">

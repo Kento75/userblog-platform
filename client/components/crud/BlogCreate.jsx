@@ -31,6 +31,7 @@ const CreateBlog = ({router}) => {
     success: '',
     formData: '',
     title: '',
+    imagePath: '',
     hidePublishButton: false,
   });
 
@@ -40,6 +41,7 @@ const CreateBlog = ({router}) => {
     success,
     formData,
     title,
+    imagePath,
     hidePublishButton,
   } = values;
   const token = getCookie('token');
@@ -82,6 +84,7 @@ const CreateBlog = ({router}) => {
           ...values,
           title: '',
           error: '',
+          imagePath: '',
           success: `A new blog titled "${data.title}" is created`,
         });
         // リセット
@@ -95,11 +98,25 @@ const CreateBlog = ({router}) => {
     });
   };
 
+  // URLオブジェクトを作成する
+  const createObjectURL =
+    (window.URL || window.webkitURL).createObjectURL || window.createObjectURL;
+
   const handleChange = name => e => {
-    // console.log(e.target.value, name);
+    console.log(e.target.value, name);
     const value = name === 'photo' ? e.target.files[0] : e.target.value;
     formData.set(name, value);
-    setValues({...values, [name]: value, formData, error: ''});
+    if (name === 'photo') {
+      setValues({
+        ...values,
+        [name]: value,
+        imagePath: createObjectURL(e.target.files[0]),
+        formData,
+        error: '',
+      });
+    } else {
+      setValues({...values, [name]: value, formData, error: ''});
+    }
   };
 
   const handleBody = e => {
@@ -260,6 +277,7 @@ const CreateBlog = ({router}) => {
           </ul>
         </div>
       </div>
+      {imagePath && <img src={imagePath} alt={title} className="w-100" />}
     </div>
   );
 };
