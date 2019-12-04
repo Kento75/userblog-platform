@@ -7,6 +7,7 @@ import {getCategories} from '../../actions/category';
 import {getTags} from '../../actions/tag';
 import {singleBlog, updateBlog} from '../../actions/blog';
 import {QuillFormats, QuillModules} from '../../helpers/quill';
+import {DOMAIN} from '../../config';
 
 // react-quill エディタを簡単に実装できる便利なやつ
 // Repository -> https://github.com/zenoamaro/react-quill
@@ -28,6 +29,7 @@ const BlogUpdate = ({router}) => {
   });
 
   const {error, success, formData, title} = values;
+  const token = getCookie('token');
 
   useEffect(() => {
     setValues({...values, formData: new FormData()});
@@ -130,12 +132,25 @@ const BlogUpdate = ({router}) => {
 
   // 既に洗濯済みである場合checked
   // arg -> category._id
-  const findOutCategory = category =>
-    checkedCategory.indexOf(category) ? true : false;
+  const findOutCategory = c => {
+    const result = checkedCategory.indexOf(c);
+    if (result !== -1) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   // 既に洗濯済みである場合checked
   // arg -> tag._id
-  const findOutTag = tag => (checkedTag.indexOf(tag) ? true : false);
+  const findOutTag = t => {
+    const result = checkedTag.indexOf(t);
+    if (result !== -1) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   // カテゴリトグル
   const handleCategoriesToggle = c => () => {
@@ -180,8 +195,29 @@ const BlogUpdate = ({router}) => {
     formData.set('body', e);
   };
 
-  const editBlog = () => {
-    console.log('update blog');
+  // ブログ更新
+  const editBlog = e => {
+    e.preventDefault();
+    updateBlog(formData, token, router.query.slug).then(data => {
+      if (data.error) {
+        console.log(data.error);
+        setValues({...values, error: data.error});
+      } else {
+        setValues({
+          ...values,
+          title: '',
+          success: `Blog titled "${data.title}" is successfully updated`,
+        });
+
+        // 管理者の場合
+        if (isAuth() && isAuth().role === 1) {
+          Router.replace(`/admin/crud/${router.query.slug}`);
+          // 一般の場合
+        } else if (isAuth() && isAuth().role === 0) {
+          Router.replace(`/user/crud/${router.query.slug}`);
+        }
+      }
+    });
   };
 
   const updateBlogForm = () => {
