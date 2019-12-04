@@ -198,6 +198,7 @@ const BlogUpdate = ({router}) => {
   // ブログ更新
   const editBlog = e => {
     e.preventDefault();
+    console.log(router.query.slug);
     updateBlog(formData, token, router.query.slug).then(data => {
       if (data.error) {
         console.log(data.error);

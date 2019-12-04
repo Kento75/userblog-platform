@@ -236,7 +236,7 @@ exports.remove = (req, res) => {
 }
 
 exports.update = (req, res) => {
-    const slug = req.body.slug;
+    const slug = req.params.slug.toLowerCase();
 
     Blog.findOne({
         slug
@@ -284,7 +284,7 @@ exports.update = (req, res) => {
             }
 
             // validators
-            if (typeof oldBlog.files.photo === "undefined" || typeof oldBlog.files.photo.path === "undefined") {
+            if (typeof oldBlog.photo === "undefined") {
                 return res.status(400).json({
                     error: "Image is required"
                 });
@@ -313,22 +313,16 @@ exports.update = (req, res) => {
                     error: "At least one tag is required"
                 });
             }
-            if (typeof oldBlog.files.photo === "undefined" || typeof oldBlog.files.photo.path === "undefined") {
-                return res.status(400).json({
-                    error: "Image is required"
-                });
-            }
 
             // イメージが大きすぎる場合
-            if (oldBlog.files.photo) {
-                if (oldBlog.files.photo.size > 10000000) {
+            if (oldBlog.photo) {
+                if (typeof oldBlog.photo.size !== "undefined" && oldBlog.photo.size < 10000000) {
                     return res.status(400).json({
                         error: "Image should be less then 1mb in size"
                     });
+                    oldBlog.photo.data = fs.readFileSync(files.photo.path);
+                    oldBlog.photo.contentType = files.photo.type;
                 }
-
-                oldBlog.photo.data = fs.readFileSync(files.photo.path);
-                oldBlog.photo.contentType = files.photo.type;
             }
 
             oldBlog.save((err, result) => {
