@@ -20,6 +20,7 @@ import {
   DropdownItem,
 } from 'reactstrap';
 import Router from 'next/router';
+import Search from './blog/Search';
 
 NProgress.configure({showSpinner: false, easing: 'ease', speed: 500});
 // https://nextjs.org/docs#router-events
@@ -34,7 +35,7 @@ const Header = () => {
     setIsOpen(!isOpen);
   };
   return (
-    <div>
+    <React.Fragment>
       <Navbar color="light" light expand="md">
         <Link href="/">
           <NavbarBrand className="font-weight-bold">{APP_NAME}</NavbarBrand>
@@ -96,7 +97,8 @@ const Header = () => {
           </Nav>
         </Collapse>
       </Navbar>
-    </div>
+      <Search />
+    </React.Fragment>
   );
 };
 
