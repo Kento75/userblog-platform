@@ -6,10 +6,14 @@ const {
 } = require("../controllers/auth.js");
 const {
   read,
-  publicProfile
+  publicProfile,
+  update,
+  photo
 } = require("../controllers/user.js");
 
 router.get("/profile", requireSiginin, authMiddleware, read);
 router.get("/user/:username", publicProfile);
+router.put("/user/update", requireSiginin, authMiddleware, update);
+router.get("/user/photo/:username", photo);
 
 module.exports = router;
