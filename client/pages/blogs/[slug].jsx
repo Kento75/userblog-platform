@@ -71,7 +71,7 @@ const SingleBlog = ({query, blog}) => {
 
   const showRelatedBlog = () => {
     return related.map((blog, index) => (
-      <div key={index} className="col-md-4">
+      <div key={index} className="col-md-4 pb-3">
         <article>
           <SmallCard blog={blog} />
         </article>
