@@ -1,4 +1,6 @@
+const _ = require("lodash");
 const Category = require("../models/category.js");
+const Blog = require("../models/blog.js");
 const slugify = require("slugify");
 const {
   errorHandler
@@ -41,13 +43,34 @@ exports.list = (req, res) => {
 exports.read = (req, res) => {
   const slug = req.params.slug.toLowerCase();
 
-  Category.findOne({}).exec((err, category) => {
+  Category.findOne({
+    slug: slug
+  }).exec((err, category) => {
     if (err) {
       return res.status(400).json({
         error: errorHandler(err)
       });
     }
-    res.json(category);
+
+    Blog.find({
+        categories: category._id.toString()
+      })
+      .populate('categories', '_id name slug')
+      .populate('tags', '_id name slug')
+      .populate('postedBy', '_id name')
+      .select('_id title slug excerpt categories postedBy tags createdAt updatedAt')
+      .exec((err, data) => {
+        if (err) {
+          return res.status(400).json({
+            error: errorHandler(err)
+          });
+        }
+        console.log("blogs: " + data)
+        res.json({
+          category: category,
+          blogs: data
+        });
+      });
   });
 };
 

@@ -30,7 +30,7 @@ export const getCategories = () => {
 };
 
 export const singleCategory = (slug) => {
-  return fetch(`${API}/categorory/${slug}`, {
+  return fetch(`${API}/category/${slug}`, {
       method: 'GET',
     })
     .then(response => {

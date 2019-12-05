@@ -366,7 +366,7 @@ exports.listRelated = (req, res) => {
     } = req.body.blog;
 
     // _id以外の要素を除外して [...] に変更する
-    arrayCategories = _.chain(categories)
+    const arrayCategories = _.chain(categories)
         .map('_id')
         .flatten()
         .value();
