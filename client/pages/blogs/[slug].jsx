@@ -14,7 +14,7 @@ import {API, DOMAIN, APP_NAME, FB_APP_ID} from '../../config';
 
 dayjs.extend(relativeTime);
 
-const SingleBlog = ({query, blog}) => {
+const SingleBlog = ({query, blog, isFound}) => {
   const [related, setRelated] = useState([]);
 
   const loadRelated = () => {
@@ -28,7 +28,9 @@ const SingleBlog = ({query, blog}) => {
   };
 
   useEffect(() => {
-    loadRelated();
+    if (isFound) {
+      loadRelated();
+    }
   }, []);
 
   // SEO Header
@@ -81,62 +83,70 @@ const SingleBlog = ({query, blog}) => {
 
   return (
     <React.Fragment>
-      {head()}
       <Layout>
-        <main>
-          <article>
-            <div className="container-fluid text-break">
-              <section>
-                <div
-                  className="row"
-                  style={{
-                    marginTop: '-30px',
-                  }}
-                >
-                  <img
-                    src={`${API}/blog/photo/${blog.slug}`}
-                    alt={blog.title}
-                    className="img image-fluid featured-image w-100"
-                  />
-                </div>
-              </section>
+        {isFound ? (
+          <React.Fragment>
+            head()
+            <main>
+              <article>
+                <div className="container-fluid text-break">
+                  <section>
+                    <div
+                      className="row"
+                      style={{
+                        marginTop: '-30px',
+                      }}
+                    >
+                      <img
+                        src={`${API}/blog/photo/${blog.slug}`}
+                        alt={blog.title}
+                        className="img image-fluid featured-image w-100"
+                      />
+                    </div>
+                  </section>
 
-              <section>
+                  <section>
+                    <div className="container">
+                      <h1 className="display-2 pt-3 pb-3 text-center font-weight-bold">
+                        {blog.title}
+                      </h1>
+                      <p className="lead mt-3 mark">
+                        Written by {blog.postedBy.name} || Published{' '}
+                        {dayjs(blog.updatedAt).fromNow()}
+                      </p>
+                      <div className="pb-3">
+                        {showBlogCategories(blog)}
+                        {showBlogTags(blog)}
+                        <br />
+                        <br />
+                      </div>
+                    </div>
+                  </section>
+                </div>
+
+                <div className="container  text-break">
+                  <section>
+                    <div className="col-md-12 lead">
+                      {renderHTML(blog.body)}
+                    </div>
+                  </section>
+                </div>
+
                 <div className="container">
-                  <h1 className="display-2 pt-3 pb-3 text-center font-weight-bold">
-                    {blog.title}
-                  </h1>
-                  <p className="lead mt-3 mark">
-                    Written by {blog.postedBy.name} || Published{' '}
-                    {dayjs(blog.updatedAt).fromNow()}
-                  </p>
-                  <div className="pb-3">
-                    {showBlogCategories(blog)}
-                    {showBlogTags(blog)}
-                    <br />
-                    <br />
-                  </div>
+                  <h4 className="text-center pt-5 pb-5 h2">Related blogs</h4>
+                  <hr />
+                  <div className="row">{showRelatedBlog()}</div>
                 </div>
-              </section>
-            </div>
 
-            <div className="container  text-break">
-              <section>
-                <div className="col-md-12 lead">{renderHTML(blog.body)}</div>
-              </section>
-            </div>
-
-            <div className="container">
-              <h4 className="text-center pt-5 pb-5 h2">Related blogs</h4>
-              <hr />
-              <div className="row">{showRelatedBlog()}</div>
-            </div>
-
-            <div className="container pb-5">
-              <p>show comments</p>
-            </div>
-          </article>
-        </main>
+                <div className="container pb-5">
+                  <p>show comments</p>
+                </div>
+              </article>
+            </main>
+          </React.Fragment>
+        ) : (
+          <div className="container">not found</div>
+        )}
       </Layout>
     </React.Fragment>
   );
@@ -144,10 +154,13 @@ const SingleBlog = ({query, blog}) => {
 
 SingleBlog.getInitialProps = ({query}) => {
   return singleBlog(query.slug).then(data => {
-    if (data.error) {
+    if (data === null || typeof data === 'undefined') {
+      return {isFound: false};
+    } else if (data.error) {
       console.log(data.error);
+      return {isFound: false};
     } else {
-      return {blog: data, query};
+      return {blog: data, query, isFound: true};
     }
   });
 };

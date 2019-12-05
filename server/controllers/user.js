@@ -41,6 +41,7 @@ exports.publicProfile = (req, res) => {
         }
 
         user.photo = undefined;
+        user.hashed_password = undefined;
         res.json({
           user,
           blogs: data
