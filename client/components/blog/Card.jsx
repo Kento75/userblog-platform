@@ -39,8 +39,11 @@ const Card = ({blog}) => {
 
       <section>
         <p className="mark ml-1 pt-2 pb-2">
-          Written by {blog.postedBy.name} || Published{' '}
-          {dayjs(blog.updatedAt).fromNow()}
+          Written by{' '}
+          <Link href={`/profile/${blog.postedBy.username}`}>
+            <a>{blog.postedBy.name}</a>
+          </Link>{' '}
+          || Published {dayjs(blog.updatedAt).fromNow()}
         </p>
       </section>
       <section className="pb-4">

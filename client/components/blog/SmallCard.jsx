@@ -35,11 +35,17 @@ const SmallCard = ({blog}) => {
         </section>
       </div>
 
-      <div className="card-body">
-        Posted {dayjs(blog.updatedAt).fromNow()} by{' '}
-        <Link href={`/`}>
-          <a className="float-right">{blog.postedBy.name}</a>
-        </Link>
+      <div className="card-body lead mark">
+        <p className="float-left mt-0 mb-0">
+          Posted {dayjs(blog.updatedAt).fromNow()}
+        </p>
+        <br />
+        <p className="float-right mt-0 mb-0">
+          by{' '}
+          <Link href={`/profile/${blog.postedBy.username}`}>
+            <a>{blog.postedBy.name}</a>
+          </Link>
+        </p>
       </div>
     </div>
   );

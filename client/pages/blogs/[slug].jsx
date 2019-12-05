@@ -111,8 +111,11 @@ const SingleBlog = ({query, blog, isFound}) => {
                         {blog.title}
                       </h1>
                       <p className="lead mt-3 mark">
-                        Written by {blog.postedBy.name} || Published{' '}
-                        {dayjs(blog.updatedAt).fromNow()}
+                        Written by{' '}
+                        <Link href={`/profile/${blog.postedBy.username}`}>
+                          <a>{blog.postedBy.name}</a>
+                        </Link>{' '}
+                        || Published {dayjs(blog.updatedAt).fromNow()}
                       </p>
                       <div className="pb-3">
                         {showBlogCategories(blog)}
