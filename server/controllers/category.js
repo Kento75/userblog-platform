@@ -1,4 +1,3 @@
-const _ = require("lodash");
 const Category = require("../models/category.js");
 const Blog = require("../models/blog.js");
 const slugify = require("slugify");
@@ -65,7 +64,6 @@ exports.read = (req, res) => {
             error: errorHandler(err)
           });
         }
-        console.log("blogs: " + data)
         res.json({
           category: category,
           blogs: data

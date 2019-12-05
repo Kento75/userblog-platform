@@ -5,29 +5,29 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 
 import Layout from '../../components/Layout';
 import Card from '../../components//blog/Card';
-import {singleCategory} from '../../actions/category';
+import {singleTag} from '../../actions/tag';
 import {API, DOMAIN, APP_NAME, FB_APP_ID} from '../../config';
 
 dayjs.extend(relativeTime);
 
-const Category = ({category, blogs, query}) => {
+const Tag = ({tag, blogs, query}) => {
   // SEO Header
   const head = () => (
     <Head>
       <title>
-        {category.name} | {APP_NAME}
+        {tag.name} | {APP_NAME}
       </title>
       <meta
         name="description"
-        content={`Programing blogs on node next react vue web development on ${category.name}`}
+        content={`Programing blogs on node next react vue web development on ${tag.name}`}
       />
 
       <link rel="canonical" href={`${DOMAIN}/blogs/${query.slug}`} />
 
-      <meta property="og:title" content={`${category.name} | ${APP_NAME}`} />
+      <meta property="og:title" content={`${tag.name} | ${APP_NAME}`} />
       <meta
         property="og:description"
-        content={`Programing blogs on node next react vue web development on ${category.name}`}
+        content={`Programing blogs on node next react vue web development on ${tag.name}`}
       />
       <meta property="og:type" content="website" />
       <meta property="og:url" content={`${DOMAIN}/categories/${query.slug}`} />
@@ -55,7 +55,7 @@ const Category = ({category, blogs, query}) => {
           <div className="container-fluid text-center">
             <header>
               <div className="col-md-12 pt3">
-                <h1 className="display-4 font-weight-bold">{category.name}</h1>
+                <h1 className="display-4 font-weight-bold">{tag.name}</h1>
                 {blogs.map((blog, index) => (
                   <div>
                     <Card key={index} blog={blog} />
@@ -71,14 +71,14 @@ const Category = ({category, blogs, query}) => {
   );
 };
 
-Category.getInitialProps = ({query}) => {
-  return singleCategory(query.slug).then(data => {
+Tag.getInitialProps = ({query}) => {
+  return singleTag(query.slug).then(data => {
     if (data.error) {
       console.log(data.error);
     } else {
-      return {category: data.category, blogs: data.blogs, query};
+      return {tag: data.tag, blogs: data.blogs, query};
     }
   });
 };
 
-export default Category;
+export default Tag;
