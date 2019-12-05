@@ -12,7 +12,8 @@ const {
     remove,
     update,
     photo,
-    listRelated
+    listRelated,
+    listSearch
 } = require("../controllers/blog.js");
 
 router.post("/blog", requireSiginin, adminMiddleware, create);
@@ -23,5 +24,6 @@ router.delete("/blog/:slug", requireSiginin, adminMiddleware, remove);
 router.put("/blog/:slug", requireSiginin, adminMiddleware, update);
 router.get("/blog/photo/:slug", photo);
 router.post("/blogs/related", listRelated);
+router.get("/blogs/search", listSearch);
 
 module.exports = router;
