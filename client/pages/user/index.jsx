@@ -6,7 +6,36 @@ const UserIndex = () => {
   return (
     <Layout>
       <Private>
-        <h2>User Dashboard</h2>
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-md-12 pt-5 pb-5">
+              <h2>User Dashboard</h2>
+            </div>
+            {/* https://www.w3schools.com/bootstrap4/bootstrap_list_groups.asp */}
+            <div className="col-md-4">
+              <ul className="list-group">
+                <li className="list-group-item list-group-item-action">
+                  <Link href="/user/crud/blog">
+                    <a>Create Blog</a>
+                  </Link>
+                </li>
+
+                <li className="list-group-item list-group-item-action">
+                  <Link href="/user/crud/blogs">
+                    <a>Update or Delete Blog</a>
+                  </Link>
+                </li>
+
+                <li className="list-group-item list-group-item-action">
+                  <Link href="/user/update">
+                    <a>Update Profile</a>
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div className="col-md-8">right</div>
+          </div>
+        </div>
       </Private>
     </Layout>
   );
