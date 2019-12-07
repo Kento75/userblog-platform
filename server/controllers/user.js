@@ -55,7 +55,14 @@ exports.publicProfile = (req, res) => {
 
 exports.update = (req, res) => {
   let form = new formidable.IncomingForm();
+  form.keepExtensions = true;
+  console.log(req);
   form.parse(req, (err, fields, files) => {
+
+    console.log("EDDDDDDDDDDDDDDDDDDDDDDDd")
+    console.log(files);
+    console.log("EDDDDDDDDDDDDDDDDDDDDDDDd")
+
     if (err) {
       return res.status(400).json({
         error: "Photo could not be upload"
@@ -64,6 +71,12 @@ exports.update = (req, res) => {
     let user = req.profile;
 
     user = _.extend(user, fields);
+
+    if (fields.password && fields.password.length < 6) {
+      return res.status(400).json({
+        error: "Password should be a min 6 characters long"
+      });
+    }
 
     if (files.photo) {
       if (files.photo.size > 10000000) {
@@ -74,18 +87,19 @@ exports.update = (req, res) => {
 
       user.photo.data = fs.readFileSync(files.photo.path);
       user.photo.contentType = files.photo.type;
-
-      user.save((err, result) => {
-        if (err) {
-          return res.status(400).json({
-            error: errorHandler(err)
-          });
-        }
-        user.hashed_password = undefined;
-        res.json(user);
-      })
     }
-  })
+    user.save((err, result) => {
+      if (err) {
+        return res.status(400).json({
+          error: errorHandler(err)
+        });
+      }
+      user.hashed_password = undefined;
+      user.salt = undefined;
+      user.photo = undefined;
+      res.json(user);
+    });
+  });
 };
 
 exports.photo = (req, res) => {

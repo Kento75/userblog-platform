@@ -33,6 +33,7 @@ export const update = (token, user) => {
         Accept: "application/json",
         Authorization: `Bearer ${token}`
       },
+      body: user
     })
     .then(response => response.json())
     .catch(err => console.log(err));

@@ -3,11 +3,11 @@ import Link from 'next/link';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-dayjs.extend(relativeTime);
+dayjs.extend (relativeTime);
 
 import {userPublicProfile} from '../../actions/user';
 import Layout from '../../components/Layout';
-import {APP_NAME, FB_APP_ID, DOMAIN} from '../../config';
+import {APP_NAME, FB_APP_ID, DOMAIN, API} from '../../config';
 
 const UserProfile = ({user, blogs, query}) => {
   // SEO Header
@@ -40,7 +40,7 @@ const UserProfile = ({user, blogs, query}) => {
   );
 
   const showUserBlogs = () => {
-    return blogs.map((blog, index) => {
+    return blogs.map ((blog, index) => {
       return (
         <div key={index} className="mt-4 mb-4">
           <Link href={`/blogs/${blog.slug}`}>
@@ -53,20 +53,29 @@ const UserProfile = ({user, blogs, query}) => {
 
   return (
     <React.Fragment>
-      {head()}
+      {head ()}
       <Layout>
         <div className="container">
           <div className="row">
             <div className="col-md-12">
               <div className="card">
                 <div className="card-body">
-                  <h5>{user.name}</h5>
-                  <Link href={`${user.profile}`}>
-                    <a>View Profile</a>
-                  </Link>
-                  <p className="text-muted">
-                    Joined {dayjs(user.createdAt).fromNow()}
-                  </p>
+                  <div className="row">
+                    <div className="col-md-8">
+                      <h5>{user.name}</h5>
+                      <p className="text-muted">
+                        Joined {dayjs (user.createdAt).fromNow ()}
+                      </p>
+                    </div>
+                    <div className="col-md-4">
+                      <img
+                        src={`${API}/user/photo/${query.username}`}
+                        alt="user profile"
+                        className="img img-fluid img-thumbnail mb-3 mw-100"
+                        style={{maxHeight: '100px'}}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -82,7 +91,7 @@ const UserProfile = ({user, blogs, query}) => {
                     Recent blogs by {user.name}
                   </h5>
                   <br />
-                  {showUserBlogs()}
+                  {showUserBlogs ()}
                 </div>
               </div>
             </div>
@@ -105,9 +114,9 @@ const UserProfile = ({user, blogs, query}) => {
 };
 
 UserProfile.getInitialProps = ({query}) => {
-  return userPublicProfile(query.username).then(data => {
+  return userPublicProfile (query.username).then (data => {
     if (data.error) {
-      console.log(data.error);
+      console.log (data.error);
     } else {
       return {user: data.user, blogs: data.blogs, query};
     }
