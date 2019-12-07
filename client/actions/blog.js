@@ -23,7 +23,7 @@ export const createBlog = (blog, token) => {
   } else if (isAuth() && isAuth().role === 0) {
     createBlogEndpoint = `${API}/user/blog`;
   }
-  return fetch(createBlogEndpoint, {
+  return fetch(`${createBlogEndpoint}`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -67,7 +67,9 @@ export const singleBlog = (slug) => {
   return fetch(`${API}/blog/${slug}`, {
       method: "GET",
     })
-    .then(response => response.json())
+    .then(response => {
+      return response.json()
+    })
     .catch(err => console.log(err));
 };
 
@@ -90,11 +92,21 @@ export const listRelated = blog => {
     .catch(err => console.log(err));
 };
 
-export const list = () => {
-  return fetch(`${API}/blogs`, {
-      method: "GET",
+export const list = username => {
+  let listBlogsEndpoint;
+
+  if (username) {
+    listBlogsEndpoint = `${API}/${username}/blogs`;
+  } else {
+    listBlogsEndpoint = `${API}/blogs`;
+  }
+
+  return fetch(`${listBlogsEndpoint}`, {
+      method: 'GET'
     })
-    .then(response => response.json())
+    .then(response => {
+      return response.json();
+    })
     .catch(err => console.log(err));
 };
 
@@ -144,6 +156,8 @@ export const listSearch = (params) => {
   return fetch(`${API}/blogs/search?${query}`, {
       method: "GET",
     })
-    .then(response => response.json())
+    .then(response => {
+      return response.json()
+    })
     .catch(err => console.log(err));
 };

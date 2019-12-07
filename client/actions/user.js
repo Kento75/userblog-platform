@@ -10,7 +10,9 @@ export const userPublicProfile = username => {
         Accept: 'application/json',
       },
     })
-    .then(response => response.json())
+    .then(response => {
+      return response.json()
+    })
     .catch(err => console.log(err));
 };
 
@@ -22,7 +24,9 @@ export const getProfile = token => {
         Authorization: `Bearer ${token}`
       }
     })
-    .then(response => response.json())
+    .then(response => {
+      return response.json()
+    })
     .catch(err => console.log(err));
 };
 
@@ -35,6 +39,8 @@ export const update = (token, user) => {
       },
       body: user
     })
-    .then(response => response.json())
+    .then(response => {
+      return response.json()
+    })
     .catch(err => console.log(err));
 }
