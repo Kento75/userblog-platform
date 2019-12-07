@@ -4,13 +4,26 @@ import queryString from "query-string";
 import {
   API
 } from '../config';
+import {
+  isAuth
+} from "./auth";
 
 /**
  * @param  {} blog
  * @param  {} token
  */
 export const createBlog = (blog, token) => {
-  return fetch(`${API}/blog`, {
+  let createBlogEndpoint;
+
+  // admin route
+  if (isAuth() && isAuth().role === 1) {
+    createBlogEndpoint = `${API}/blog`;
+
+    // auth user route
+  } else if (isAuth() && isAuth().role === 0) {
+    createBlogEndpoint = `${API}/user/blog`;
+  }
+  return fetch(createBlogEndpoint, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
