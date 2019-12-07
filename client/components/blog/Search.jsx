@@ -4,23 +4,26 @@ import renderHTML from 'react-render-html';
 import {listSearch} from '../../actions/blog';
 
 const Search = ({router}) => {
-  const [values, setValues] = useState({
+  const [values, setValues] = useState ({
     search: undefined,
     results: [],
     searched: false,
     message: '',
   });
 
-  useEffect(() => {
-    console.log(router);
-  }, [router]);
+  useEffect (
+    () => {
+      console.log (router);
+    },
+    [router]
+  );
 
   const {search, results, searched, message} = values;
 
   const searchSubmit = e => {
-    e.preventDefault();
-    listSearch({search}).then(data => {
-      setValues({
+    e.preventDefault ();
+    listSearch ({search}).then (data => {
+      setValues ({
         ...values,
         results: data,
         searched: true,
@@ -30,7 +33,7 @@ const Search = ({router}) => {
   };
 
   const handleChange = e => {
-    setValues({
+    setValues ({
       ...values,
       search: e.target.value,
       searched: false,
@@ -42,7 +45,7 @@ const Search = ({router}) => {
     return (
       <div className="jumbotron bg-white">
         {message && <p className="pt-4 text-muted font-italic">{message}</p>}
-        {results.map((blog, index) => {
+        {results.map ((blog, index) => {
           return (
             <div key={index}>
               <Link href={`/blogs/${blog.slug}`}>
@@ -58,7 +61,7 @@ const Search = ({router}) => {
   const searchForm = () => (
     <form onSubmit={searchSubmit}>
       <div className="row">
-        <div className="col-md-8">
+        <div className="col-md-8 mb-3">
           <input
             type="search"
             className="form-control"
@@ -78,12 +81,11 @@ const Search = ({router}) => {
 
   return (
     <div className="container-fluid">
-      <div className="pt-3 pb-5">{searchForm()}</div>
-      {searched && (
+      <div className="pt-3 pb-5">{searchForm ()}</div>
+      {searched &&
         <div style={{marginTop: '-120px', marginBottom: '-80px'}}>
-          {searchedBlogs(results)}
-        </div>
-      )}
+          {searchedBlogs (results)}
+        </div>}
     </div>
   );
 };
