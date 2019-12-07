@@ -3,7 +3,8 @@ const router = express.Router();
 const {
     requireSiginin,
     adminMiddleware,
-    authMiddleware
+    authMiddleware,
+    canUpdateDeleteBlog
 } = require("../controllers/auth.js");
 const {
     create,
@@ -14,7 +15,8 @@ const {
     update,
     photo,
     listRelated,
-    listSearch
+    listSearch,
+    listByUser
 } = require("../controllers/blog.js");
 
 router.post("/blog", requireSiginin, adminMiddleware, create);
@@ -29,7 +31,8 @@ router.get("/blogs/search", listSearch);
 
 // auth user crud
 router.post("/user/blog", requireSiginin, authMiddleware, create);
-router.delete("/user/blog/:slug", requireSiginin, authMiddleware, remove);
-router.put("/user/blog/:slug", requireSiginin, authMiddleware, update);
+// router.get("/:username/blogs", listByUser);
+router.delete("/user/blog/:slug", requireSiginin, authMiddleware, canUpdateDeleteBlog, remove);
+router.put("/user/blog/:slug", requireSiginin, authMiddleware, canUpdateDeleteBlog, update);
 
 module.exports = router;

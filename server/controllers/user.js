@@ -59,10 +59,6 @@ exports.update = (req, res) => {
   console.log(req);
   form.parse(req, (err, fields, files) => {
 
-    console.log("EDDDDDDDDDDDDDDDDDDDDDDDd")
-    console.log(files);
-    console.log("EDDDDDDDDDDDDDDDDDDDDDDDd")
-
     if (err) {
       return res.status(400).json({
         error: "Photo could not be upload"
@@ -120,5 +116,33 @@ exports.photo = (req, res) => {
       res.set("Content-Type", user.photo.contentType);
       return res.send(user.photo.data);
     }
+  });
+};
+
+exports.listByUser = (req, res) => {
+  User.findOne({
+    username: req.params.username
+  }).exec((err, user) => {
+    if (err) {
+      return res.status(400).json({
+        error: errorHandler(err)
+      });
+    }
+    let userId = user._id;
+    Blog.find({
+        postedBy: userId
+      })
+      .populate('categories', '_id name slug')
+      .populate('tags', '_id name slug')
+      .populate('postedBy', '_id name username')
+      .select('_id title slug postedBy createdAt updatedAt')
+      .exec((err, data) => {
+        if (err) {
+          return res.status(400).json({
+            error: errorHandler(err)
+          });
+        }
+        res.json(data);
+      });
   });
 };
