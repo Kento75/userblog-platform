@@ -115,7 +115,18 @@ export const list = username => {
  * @param  {} token
  */
 export const removeBlog = (slug, token) => {
-  return fetch(`${API}/blog/${slug}`, {
+
+  let deleteBlogEndpoint;
+
+  // admin route
+  if (isAuth() && isAuth().role === 1) {
+    deleteBlogEndpoint = `${API}/blog/${slug}`;
+    // auth user route
+  } else if (isAuth() && isAuth().role === 0) {
+    deleteBlogEndpoint = `${API}/user/blog/${slug}`;
+  }
+
+  return fetch(`${deleteBlogEndpoint}`, {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',
@@ -135,7 +146,17 @@ export const removeBlog = (slug, token) => {
  * @param  {} slug
  */
 export const updateBlog = (blog, token, slug) => {
-  return fetch(`${API}/blog/${slug}`, {
+  let updateBlogEndpoint;
+
+  // admin route
+  if (isAuth() && isAuth().role === 1) {
+    updateBlogEndpoint = `${API}/blog/${slug}`;
+    // auth user route
+  } else if (isAuth() && isAuth().role === 0) {
+    updateBlogEndpoint = `${API}/user/blog/${slug}`;
+  }
+
+  return fetch(`${updateBlogEndpoint}`, {
       method: 'PUT',
       headers: {
         Accept: 'application/json',

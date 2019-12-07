@@ -1,4 +1,5 @@
 const User = require('../models/user.js');
+const Blog = require("../models/blog.js");
 const shortId = require('shortid');
 const jwt = require("jsonwebtoken");
 const expressJwt = require("express-jwt");
