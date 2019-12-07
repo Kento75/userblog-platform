@@ -94,9 +94,12 @@ exports.update = (req, res) => {
           error: errorHandler(err)
         });
       }
+
+      // レスポンスデータに以下の情報は含めない
       user.hashed_password = undefined;
       user.salt = undefined;
       user.photo = undefined;
+
       res.json(user);
     });
   });
