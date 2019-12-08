@@ -6,55 +6,56 @@ import {list, removeBlog} from '../../actions/blog';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
-dayjs.extend (relativeTime);
+dayjs.extend(relativeTime);
 
 const BlogRead = ({username}) => {
-  const [blogs, setBlogs] = useState ([]);
-  const [message, setMessage] = useState ('');
-  const token = getCookie ('token');
+  const [blogs, setBlogs] = useState([]);
+  const [message, setMessage] = useState('');
+  const token = getCookie('token');
 
-  useEffect (() => {
-    loadBlogs ();
+  useEffect(() => {
+    loadBlogs();
   }, []);
 
   const loadBlogs = () => {
-    list (username).then (data => {
+    list(username).then(data => {
       if (data === null || typeof data === 'undefined') {
-        setBlogs ([]);
+        setBlogs([]);
       } else if (data.error) {
-        console.log (data.error);
+        console.log(data.error);
       } else {
-        setBlogs (data);
+        setBlogs(data);
       }
     });
   };
 
   const deleteBlog = slug => {
-    removeBlog (slug, token).then (data => {
-      if (data.error) {
-        console.log (data.error);
+    removeBlog(slug, token).then(data => {
+      if (data === null || typeof data === 'undefined') {
+      } else if (data.error) {
+        console.log(data.error);
       } else {
-        setMessage (data.message);
-        loadBlogs ();
+        setMessage(data.message);
+        loadBlogs();
       }
     });
   };
 
   const deleteConfirm = slug => {
-    let answer = window.confirm ('Are you sure want to delete your blog?');
+    let answer = window.confirm('Are you sure want to delete your blog?');
     if (answer) {
-      deleteBlog (slug);
+      deleteBlog(slug);
     }
   };
 
   const showUpdateButton = blog => {
-    if (isAuth () && isAuth ().role === 0) {
+    if (isAuth() && isAuth().role === 0) {
       return (
         <Link href={`/user/crud/${blog.slug}`}>
           <a className="ml-4 btn btn-sm btn-warning">Update</a>
         </Link>
       );
-    } else if (isAuth () && isAuth ().role === 1) {
+    } else if (isAuth() && isAuth().role === 1) {
       return (
         <Link href={`/admin/crud/${blog.slug}`}>
           <a className="ml-4 btn btn-sm btn-warning">Update</a>
@@ -64,21 +65,21 @@ const BlogRead = ({username}) => {
   };
 
   const showAllBlogs = () => {
-    return blogs.map ((blog, index) => {
+    return blogs.map((blog, index) => {
       return (
         <div key={index} className="pb-5 text-break">
           <h3>{blog.title}</h3>
           <p className="mark">
             Written by {blog.postedBy.name} | Publish on{' '}
-            {dayjs (blog.updatedAt).fromNow ()}
+            {dayjs(blog.updatedAt).fromNow()}
           </p>
           <button
             className="btn btn-sm btn-danger"
-            onClick={() => deleteConfirm (blog.slug)}
+            onClick={() => deleteConfirm(blog.slug)}
           >
             Delete
           </button>
-          {showUpdateButton (blog)}
+          {showUpdateButton(blog)}
           <hr />
         </div>
       );
@@ -90,7 +91,7 @@ const BlogRead = ({username}) => {
       <div className="row">
         <div className="col-md-12">
           {message && <div className="alert alert-warning">{message}</div>}
-          {showAllBlogs ()}
+          {showAllBlogs()}
         </div>
       </div>
     </React.Fragment>

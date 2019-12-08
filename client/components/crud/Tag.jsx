@@ -23,7 +23,8 @@ const Tag = () => {
 
   const loadTags = () => {
     getTags().then(data => {
-      if (data.error) {
+      if (data === null || typeof data === 'undefined') {
+      } else if (data.error) {
         console.log(data.error);
       } else {
         setValues({...values, tags: data});
@@ -50,7 +51,8 @@ const Tag = () => {
     let answer = window.confirm('Are you sure you want to delete this tag?');
     if (answer) {
       removeTag(slug, token).then(data => {
-        if (data.error) {
+        if (data === null || typeof data === 'undefined') {
+        } else if (data.error) {
           console.log(data.error);
         } else {
           setValues({
@@ -69,7 +71,8 @@ const Tag = () => {
   const clickSubmit = e => {
     e.preventDefault();
     create({name}, token).then(data => {
-      if (data.error) {
+      if (data === null || typeof data === 'undefined') {
+      } else if (data.error) {
         setValues({...values, error: data.error, success: false});
       } else {
         setValues({

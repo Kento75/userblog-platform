@@ -25,12 +25,10 @@ const SigninComponent = () => {
     const user = {email, password};
 
     signin(user).then(data => {
-      if (data.error) {
+      if (data === null || typeof data === 'undefined') {
+      } else if (data.error) {
         setValues({...values, error: data.error});
       } else {
-        // save user token to cookie
-        // save user info to localstorage
-        // authenticate user
         authenticate(data, () => {
           // 管理者の場合
           if (isAuth() && data.user.role === 1) {

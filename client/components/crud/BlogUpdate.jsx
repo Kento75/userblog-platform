@@ -41,7 +41,8 @@ const BlogUpdate = ({router}) => {
   // カテゴリ一覧取得
   const initCategories = () => {
     getCategories().then(data => {
-      if (data.error) {
+      if (data === null || typeof data === 'undefined') {
+      } else if (data.error) {
         setValues({...values, error: data.error});
       } else {
         setCategories(data);

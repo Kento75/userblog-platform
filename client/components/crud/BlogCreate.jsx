@@ -55,7 +55,9 @@ const CreateBlog = ({router}) => {
   // カテゴリ一覧取得
   const initCategories = () => {
     getCategories().then(data => {
-      if (data.error) {
+      if (data === null || typeof data === 'undefined') {
+        setCategories([]);
+      } else if (data.error) {
         setValues({...values, error: data.error});
       } else {
         setCategories(data);
@@ -66,7 +68,9 @@ const CreateBlog = ({router}) => {
   // タグ一覧取得
   const initTags = () => {
     getTags().then(data => {
-      if (data.error) {
+      if (data === null || typeof data === 'undefined') {
+        setTags([]);
+      } else if (data.error) {
         setValues({...values, error: data.error});
       } else {
         setTags(data);
@@ -77,7 +81,8 @@ const CreateBlog = ({router}) => {
   const publishBlog = e => {
     e.preventDefault();
     createBlog(formData, token).then(data => {
-      if (data.error) {
+      if (data === null || typeof data === 'undefined') {
+      } else if (data.error) {
         setValues({...values, error: data.error});
       } else {
         setValues({

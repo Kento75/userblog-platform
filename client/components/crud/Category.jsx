@@ -23,7 +23,8 @@ const Category = () => {
 
   const loadCategories = () => {
     getCategories().then(data => {
-      if (data.error) {
+      if (data === null || typeof data === 'undefined') {
+      } else if (data.error) {
         console.log(data.error);
       } else {
         setValues({...values, categories: data});
@@ -52,7 +53,8 @@ const Category = () => {
     );
     if (answer) {
       removeCategory(slug, token).then(data => {
-        if (data.error) {
+        if (data === null || typeof data === 'undefined') {
+        } else if (data.error) {
           console.log(data.error);
         } else {
           setValues({
@@ -71,7 +73,8 @@ const Category = () => {
   const clickSubmit = e => {
     e.preventDefault();
     create({name}, token).then(data => {
-      if (data.error) {
+      if (data === null || typeof data === 'undefined') {
+      } else if (data.error) {
         setValues({...values, error: data.error, success: false});
       } else {
         setValues({

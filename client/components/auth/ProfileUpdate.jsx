@@ -6,7 +6,7 @@ import {getProfile, update} from '../../actions/user';
 import {API} from '../../config';
 
 const ProfileUpdate = () => {
-  const [values, setValues] = useState ({
+  const [values, setValues] = useState({
     username: '',
     name: '',
     email: '',
@@ -19,7 +19,7 @@ const ProfileUpdate = () => {
     userData: '',
   });
 
-  const token = getCookie ('token');
+  const token = getCookie('token');
   const {
     username,
     name,
@@ -34,11 +34,12 @@ const ProfileUpdate = () => {
   } = values;
 
   const init = () => {
-    getProfile (token).then (data => {
-      if (data.error) {
-        setValues ({...values, error: data.error});
+    getProfile(token).then(data => {
+      if (data === null || typeof data === 'undefined') {
+      } else if (data.error) {
+        setValues({...values, error: data.error});
       } else {
-        setValues ({
+        setValues({
           ...values,
           username: data.username,
           name: data.name,
@@ -49,15 +50,15 @@ const ProfileUpdate = () => {
     });
   };
 
-  useEffect (() => {
-    init ();
+  useEffect(() => {
+    init();
   }, []);
 
   const handleChange = name => e => {
     const value = name === 'photo' ? e.target.files[0] : e.target.value;
-    let userFormData = new FormData ();
-    userFormData.set (name, value);
-    setValues ({
+    let userFormData = new FormData();
+    userFormData.set(name, value);
+    setValues({
       ...values,
       [name]: value,
       userData: userFormData,
@@ -67,11 +68,12 @@ const ProfileUpdate = () => {
   };
 
   const handleSubmit = e => {
-    e.preventDefault ();
-    setValues ({...values, loading: true});
-    update (token, userData).then (data => {
-      if (data.error) {
-        setValues ({
+    e.preventDefault();
+    setValues({...values, loading: true});
+    update(token, userData).then(data => {
+      if (data === null || typeof data === 'undefined') {
+      } else if (data.error) {
+        setValues({
           ...values,
           error: data.error,
           success: false,
@@ -79,8 +81,8 @@ const ProfileUpdate = () => {
         });
       } else {
         // localStorageへ保存 & hooksでの保存
-        updateUser (data, () => {
-          setValues ({
+        updateUser(data, () => {
+          setValues({
             ...values,
             username: data.username,
             name: data.name,
@@ -101,19 +103,18 @@ const ProfileUpdate = () => {
         <label className="btn btn-outline-info">
           Profile photo
           <input
-            onChange={handleChange ('photo')}
+            onChange={handleChange('photo')}
             type="file"
             accept="image/*"
             hidden
           />
         </label>
-
       </div>
 
       <div className="form-group">
         <label className="text-muted">Username</label>
         <input
-          onChange={handleChange ('username')}
+          onChange={handleChange('username')}
           type="text"
           value={username}
           className="form-control"
@@ -123,7 +124,7 @@ const ProfileUpdate = () => {
       <div className="form-group">
         <label className="text-muted">Name</label>
         <input
-          onChange={handleChange ('name')}
+          onChange={handleChange('name')}
           type="text"
           value={name}
           className="form-control"
@@ -133,7 +134,7 @@ const ProfileUpdate = () => {
       <div className="form-group">
         <label className="text-muted">Email</label>
         <input
-          onChange={handleChange ('email')}
+          onChange={handleChange('email')}
           type="email"
           value={email}
           className="form-control"
@@ -143,7 +144,7 @@ const ProfileUpdate = () => {
       <div className="form-group">
         <label className="text-muted">About</label>
         <textarea
-          onChange={handleChange ('about')}
+          onChange={handleChange('about')}
           type="text"
           value={about}
           className="form-control"
@@ -153,7 +154,7 @@ const ProfileUpdate = () => {
       <div className="form-group">
         <label className="text-muted">Password</label>
         <input
-          onChange={handleChange ('password')}
+          onChange={handleChange('password')}
           type="password"
           value={password}
           className="form-control"
@@ -165,7 +166,6 @@ const ProfileUpdate = () => {
           Submit
         </button>
       </div>
-
     </form>
   );
 
@@ -202,10 +202,10 @@ const ProfileUpdate = () => {
             />
           </div>
           <div className="col-md-8 mb-5">
-            {showError ()}
-            {showSuccess ()}
-            {showLoading ()}
-            {profileUpdateForm ()}
+            {showError()}
+            {showSuccess()}
+            {showLoading()}
+            {profileUpdateForm()}
           </div>
         </div>
       </div>

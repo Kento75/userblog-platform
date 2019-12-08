@@ -5,7 +5,8 @@ import {
   API
 } from '../config';
 import {
-  isAuth
+  isAuth,
+  handleResponse
 } from "./auth";
 
 /**
@@ -32,6 +33,7 @@ export const createBlog = (blog, token) => {
       body: blog
     })
     .then(response => {
+      handleResponse(response);
       return response.json();
     })
     .catch(err => console.log(err));
@@ -135,6 +137,7 @@ export const removeBlog = (slug, token) => {
       }
     })
     .then(response => {
+      handleResponse(response);
       return response.json();
     })
     .catch(err => console.log(err));
@@ -165,6 +168,7 @@ export const updateBlog = (blog, token, slug) => {
       body: blog
     })
     .then(response => {
+      handleResponse(response);
       return response.json();
     })
     .catch(err => console.log(err));

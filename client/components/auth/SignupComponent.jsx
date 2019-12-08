@@ -30,7 +30,8 @@ const SignupComponent = () => {
     const user = {name, email, password};
 
     signup(user).then(data => {
-      if (data.error) {
+      if (data === null || typeof data === 'undefined') {
+      } else if (data.error) {
         setValues({...values, error: data.error});
       } else {
         setValues({
