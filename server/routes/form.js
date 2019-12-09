@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const {
-  contactForm
+  contactForm,
+  contactBlogAuthorForm
 } = require("../controllers/form.js");
 
 // validator middleware
@@ -15,5 +16,6 @@ const {
 
 // routes
 router.post("/contact", contactFormValidator, runValidation, contactForm);
+router.post("/contact-blog-author", contactFormValidator, runValidation, contactBlogAuthorForm);
 
 module.exports = router;
