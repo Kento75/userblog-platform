@@ -8,7 +8,8 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
 import Layout from '../../components/Layout';
-import SmallCard from '../../components//blog/SmallCard';
+import SmallCard from '../../components/blog/SmallCard';
+import DisqusThread from '../../components/DisqusThread';
 import {singleBlog, listRelated} from '../../actions/blog';
 import {API, DOMAIN, APP_NAME, FB_APP_ID} from '../../config';
 
@@ -81,6 +82,18 @@ const SingleBlog = ({query, blog, isFound}) => {
     ));
   };
 
+  const showComments = () => {
+    return (
+      <div>
+        <DisqusThread
+          id={blog.id}
+          title={blog.title}
+          path={`/blog/${blog.slug}`}
+        />
+      </div>
+    );
+  };
+
   return (
     <React.Fragment>
       <Layout>
@@ -141,9 +154,7 @@ const SingleBlog = ({query, blog, isFound}) => {
                   <div className="row">{showRelatedBlog()}</div>
                 </div>
 
-                <div className="container pb-5">
-                  <p>show comments</p>
-                </div>
+                <div className="container pb-5">{showComments()}</div>
               </article>
             </main>
           </React.Fragment>

@@ -98,7 +98,7 @@ const Header = () => {
               </NavItem>}
 
             <NavItem>
-              <Link href="/user/crud/create">
+              <Link href="/user/crud/blog">
                 <NavLink
                   style={{cursor: 'pointer'}}
                   className="btn btn-primary text-light"
