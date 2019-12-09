@@ -50,7 +50,7 @@ exports.contactBlogAuthorForm = (req, res) => {
     subject: `Someone messaged you from - ${process.env.APP_NAME}`,
     text: `Email received from contact from \n Sender name: ${name} \n Sender email: ${email} \n Sender message: ${message}`,
     html: `
-        <h4>Email received from form:</h4>
+        <h4>Email received from:</h4>
         <p>name: ${name}</p>
         <p>email: ${email}</p>
         <p>message: ${message}</p>
