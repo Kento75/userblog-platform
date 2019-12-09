@@ -22,17 +22,17 @@ import {
 import Router from 'next/router';
 import Search from './blog/Search';
 
-NProgress.configure ({showSpinner: false, easing: 'ease', speed: 500});
+NProgress.configure({showSpinner: false, easing: 'ease', speed: 500});
 // https://nextjs.org/docs#router-events
-Router.events.on ('routeChangeStart', url => NProgress.start ());
-Router.events.on ('routeChangeComplete', url => NProgress.done ());
-Router.events.on ('routeChangeError', url => NProgress.done ());
+Router.events.on('routeChangeStart', url => NProgress.start());
+Router.events.on('routeChangeComplete', url => NProgress.done());
+Router.events.on('routeChangeError', url => NProgress.done());
 
 const Header = () => {
-  console.log (APP_NAME);
-  const [isOpen, setIsOpen] = useState (false);
+  console.log(APP_NAME);
+  const [isOpen, setIsOpen] = useState(false);
   const toggle = () => {
-    setIsOpen (!isOpen);
+    setIsOpen(!isOpen);
   };
   return (
     <React.Fragment>
@@ -49,9 +49,15 @@ const Header = () => {
                   <NavLink style={{cursor: 'pointer'}}>Blogs</NavLink>
                 </Link>
               </NavItem>
+
+              <NavItem>
+                <Link href="/contact">
+                  <NavLink style={{cursor: 'pointer'}}>Contact</NavLink>
+                </Link>
+              </NavItem>
             </React.Fragment>
 
-            {!isAuth () &&
+            {!isAuth() && (
               <React.Fragment>
                 <NavItem>
                   <Link href="/signin">
@@ -63,39 +69,41 @@ const Header = () => {
                     <NavLink style={{cursor: 'pointer'}}>Signup</NavLink>
                   </Link>
                 </NavItem>
-              </React.Fragment>}
+              </React.Fragment>
+            )}
 
             {/* User Dashboard */}
-            {isAuth () &&
-              isAuth ().role === 0 &&
+            {isAuth() && isAuth().role === 0 && (
               <NavItem>
                 <Link href="/user">
-                  <NavLink
-                    style={{cursor: 'pointer'}}
-                  >{`${isAuth ().name}'s Dashboard`}</NavLink>
+                  <NavLink style={{cursor: 'pointer'}}>{`${
+                    isAuth().name
+                  }'s Dashboard`}</NavLink>
                 </Link>
-              </NavItem>}
+              </NavItem>
+            )}
 
             {/* Admin Dashboard */}
-            {isAuth () &&
-              isAuth ().role === 1 &&
+            {isAuth() && isAuth().role === 1 && (
               <NavItem>
                 <Link href="/admin">
-                  <NavLink
-                    style={{cursor: 'pointer'}}
-                  >{`${isAuth ().name}'s Dashboard`}</NavLink>
+                  <NavLink style={{cursor: 'pointer'}}>{`${
+                    isAuth().name
+                  }'s Dashboard`}</NavLink>
                 </Link>
-              </NavItem>}
+              </NavItem>
+            )}
 
-            {isAuth () &&
+            {isAuth() && (
               <NavItem>
                 <NavLink
                   style={{cursor: 'pointer'}}
-                  onClick={() => signout (() => Router.replace (`/signin`))}
+                  onClick={() => signout(() => Router.replace(`/signin`))}
                 >
                   Signout
                 </NavLink>
-              </NavItem>}
+              </NavItem>
+            )}
 
             <NavItem>
               <Link href="/user/crud/blog">
@@ -107,7 +115,6 @@ const Header = () => {
                 </NavLink>
               </Link>
             </NavItem>
-
           </Nav>
         </Collapse>
       </Navbar>
