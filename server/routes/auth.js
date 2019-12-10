@@ -4,7 +4,9 @@ const {
     signup,
     signin,
     signout,
-    requireSiginin
+    requireSiginin,
+    forgotPassword,
+    resetPassword
 } = require("../controllers/auth.js");
 
 // validator middleware
@@ -14,7 +16,9 @@ const {
 // auth validator
 const {
     userSignupValidator,
-    userSigninValidator
+    userSigninValidator,
+    forgotPasswordValidator,
+    resetPasswordValidator
 } = require("../validators/auth.js");
 
 
@@ -22,11 +26,8 @@ router.post("/signup", userSignupValidator, runValidation, signup);
 router.post("/signin", userSigninValidator, runValidation, signin);
 router.get("/signout", signout);
 
-//test
-// router.get("/secret", requireSiginin, (req, res) => {
-//     res.json({
-//         user: req.user
-//     });
-// });
+// reset and forgot password routes
+router.put("/forgot-password", forgotPasswordValidator, runValidation, forgotPassword);
+router.put("/reset-password", resetPasswordValidator, runValidation, resetPassword);
 
 module.exports = router;
