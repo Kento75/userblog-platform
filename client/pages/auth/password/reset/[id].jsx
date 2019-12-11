@@ -1,11 +1,11 @@
 import {useState} from 'react';
-import Router, {withRouter} from 'next/router';
+import {withRouter} from 'next/router';
 
 import Layout from '../../../../components/Layout';
 import {resetPassword} from '../../../../actions/auth';
 
 const ResetPassword = ({router}) => {
-  const [values, setValues] = useState({
+  const [values, setValues] = useState ({
     name: '',
     newPassword: '',
     error: '',
@@ -16,29 +16,30 @@ const ResetPassword = ({router}) => {
   const {name, newPassword, error, message, showForm} = values;
 
   const handleSubmit = e => {
-    e.preventDefault();
+    e.preventDefault ();
     // router.query.id -> 1time token
-    resetPassword({newPassword, resetPasswordLink: router.query.id}).then(
-      data => {
-        if (data === null || typeof data === 'undefined') {
-        } else if (data.error) {
-          setValues({
-            ...values,
-            error: data.error,
-            showForm: false,
-            newPassword: '',
-          });
-        } else {
-          setValues({
-            ...values,
-            message: data.message,
-            showForm: false,
-            error: false,
-            newPassword: '',
-          });
-        }
+    resetPassword ({
+      newPassword,
+      resetPasswordLink: router.query.id,
+    }).then (data => {
+      if (data === null || typeof data === 'undefined') {
+      } else if (data.error) {
+        setValues ({
+          ...values,
+          error: data.error,
+          showForm: false,
+          newPassword: '',
+        });
+      } else {
+        setValues ({
+          ...values,
+          message: data.message,
+          showForm: false,
+          error: false,
+          newPassword: '',
+        });
       }
-    );
+    });
   };
 
   const passwordResetForm = () => (
@@ -48,7 +49,7 @@ const ResetPassword = ({router}) => {
           <input
             className="form-control"
             type="password"
-            onChange={e => setValues({...values, newPassword: e.target.value})}
+            onChange={e => setValues ({...values, newPassword: e.target.value})}
             value={newPassword}
             placeholder="Type new password"
             required
@@ -72,12 +73,12 @@ const ResetPassword = ({router}) => {
       <div className="container">
         <h2>Reset password</h2>
         <hr />
-        {showError()}
-        {showMessage()}
-        {showForm && passwordResetForm()}
+        {showError ()}
+        {showMessage ()}
+        {showForm && passwordResetForm ()}
       </div>
     </Layout>
   );
 };
 
-export default withRouter(ResetPassword);
+export default withRouter (ResetPassword);

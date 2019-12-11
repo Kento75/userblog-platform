@@ -10,5 +10,6 @@ module.exports = withCSS({
     DOMAIN_PRODUCTION: "https://userblog.com",
     FB_APP_ID: "", // 僕は使わない FacebookのAPP_ID
     DISQUS_SHORTNAME: 'userblog-1',
+    GOOGLE_CLIENT_ID: 'Your google console client id'
   }
 });

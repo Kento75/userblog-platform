@@ -1,9 +1,9 @@
 import {useState, useEffect} from 'react';
 import Router from 'next/router';
-import {signup, isAuth} from '../../actions/auth';
+import {preSignup, isAuth} from '../../actions/auth';
 
 const SignupComponent = () => {
-  const [values, setValues] = useState({
+  const [values, setValues] = useState ({
     name: '',
     email: '',
     password: '',
@@ -16,25 +16,25 @@ const SignupComponent = () => {
   const {name, email, password, error, loading, message, showForm} = values;
 
   // ログインしてる場合、homeへ飛ばす
-  useEffect(() => {
-    isAuth() && Router.push(`/`);
+  useEffect (() => {
+    isAuth () && Router.push (`/`);
   }, []);
 
   const handleSubmit = e => {
-    e.preventDefault();
-    setValues({
+    e.preventDefault ();
+    setValues ({
       ...values,
       loading: true,
       error: false,
     });
     const user = {name, email, password};
 
-    signup(user).then(data => {
+    preSignup (user).then (data => {
       if (data === null || typeof data === 'undefined') {
       } else if (data.error) {
-        setValues({...values, error: data.error});
+        setValues ({...values, error: data.error});
       } else {
-        setValues({
+        setValues ({
           ...values,
           name: '',
           email: '',
@@ -47,11 +47,11 @@ const SignupComponent = () => {
       }
     });
 
-    Router.replace(`/signin`);
+    // Router.replace (`/signin`);
   };
 
   const handleChange = name => e => {
-    setValues({
+    setValues ({
       ...values,
       error: false,
       [name]: e.target.value,
@@ -73,7 +73,7 @@ const SignupComponent = () => {
         <div className="form-group">
           <input
             value={name}
-            onChange={handleChange('name')}
+            onChange={handleChange ('name')}
             type="text"
             className="form-control"
             placeholder="Type your name"
@@ -82,7 +82,7 @@ const SignupComponent = () => {
         <div className="form-group">
           <input
             value={email}
-            onChange={handleChange('email')}
+            onChange={handleChange ('email')}
             type="email"
             className="form-control"
             placeholder="Type your email"
@@ -91,7 +91,7 @@ const SignupComponent = () => {
         <div className="form-group">
           <input
             value={password}
-            onChange={handleChange('password')}
+            onChange={handleChange ('password')}
             type="password"
             className="form-control"
             placeholder="Type your password"
@@ -106,10 +106,10 @@ const SignupComponent = () => {
 
   return (
     <React.Fragment>
-      {showError()}
-      {showLoading()}
-      {showMessage()}
-      {showForm && signupForm()}
+      {showError ()}
+      {showLoading ()}
+      {showMessage ()}
+      {showForm && signupForm ()}
     </React.Fragment>
   );
 };

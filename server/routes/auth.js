@@ -1,33 +1,44 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 const {
-    signup,
-    signin,
-    signout,
-    requireSiginin,
-    forgotPassword,
-    resetPassword
-} = require("../controllers/auth.js");
+  preSignup,
+  signup,
+  signin,
+  signout,
+  requireSiginin,
+  forgotPassword,
+  resetPassword,
+} = require('../controllers/auth.js');
 
 // validator middleware
 const {
-    runValidation
-} = require("../validators");
+  runValidation
+} = require('../validators');
 // auth validator
 const {
-    userSignupValidator,
-    userSigninValidator,
-    forgotPasswordValidator,
-    resetPasswordValidator
-} = require("../validators/auth.js");
+  userSignupValidator,
+  userSigninValidator,
+  forgotPasswordValidator,
+  resetPasswordValidator,
+} = require('../validators/auth.js');
 
-
-router.post("/signup", userSignupValidator, runValidation, signup);
-router.post("/signin", userSigninValidator, runValidation, signin);
-router.get("/signout", signout);
+router.post('/pre-signup', userSignupValidator, runValidation, preSignup);
+router.post('/signup', signup);
+router.post('/signin', userSigninValidator, runValidation, signin);
+router.get('/signout', signout);
 
 // reset and forgot password routes
-router.put("/forgot-password", forgotPasswordValidator, runValidation, forgotPassword);
-router.put("/reset-password", resetPasswordValidator, runValidation, resetPassword);
+router.put(
+  '/forgot-password',
+  forgotPasswordValidator,
+  runValidation,
+  forgotPassword
+);
+router.put(
+  '/reset-password',
+  resetPasswordValidator,
+  runValidation,
+  resetPassword
+);
 
 module.exports = router;
