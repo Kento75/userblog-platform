@@ -8,6 +8,7 @@ const {
   requireSiginin,
   forgotPassword,
   resetPassword,
+  googleLogin
 } = require('../controllers/auth.js');
 
 // validator middleware
@@ -40,5 +41,8 @@ router.put(
   runValidation,
   resetPassword
 );
+
+// google login
+router.post("/google-login", googleLogin);
 
 module.exports = router;

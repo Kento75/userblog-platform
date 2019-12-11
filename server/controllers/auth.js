@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const {OAuth2Client} = require('google-auth-library');
 
 const User = require('../models/user.js');
 const Blog = require('../models/blog.js');
@@ -335,4 +336,78 @@ exports.resetPassword = (req, res) => {
       );
     });
   }
+};
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+exports.googleLogin = (req, res) => {
+  const idToken = req.body.tokenId;
+
+  // google auth
+  client
+    .verifyIdToken({idToken, audience: process.env.GOOGLE_CLIENT_ID})
+    .then(response => {
+      const {email_verified, name, email, jti} = response.payload;
+
+      // ユーザーのメールアドレスが検証済み
+      if (email_verified) {
+        User.findOne({email: email}).exec((err, user) => {
+          // 既にユーザーが存在する場合
+          if (user) {
+            const token = jwt.sign({_id: user._id}, process.env.JWT_SECRET, {
+              expiresIn: process.env.TOKEN_EXPIRE,
+            });
+            res.cookie('token', token, {
+              expiresIn: process.env.TOKEN_EXPIRE,
+            });
+            const {_id, email, name, role, username} = user;
+
+            return res.json({
+              token,
+              user: {_id, email, name, role, username},
+            });
+
+            // 存在しない場合
+          } else {
+            let username = shortId.generate();
+            let profile = `${process.env.CLIENT_URL}/profile/${username}`;
+            let password = jti;
+
+            user = new User({
+              name,
+              email,
+              profile,
+              username,
+              password,
+            });
+            // 新規で作成
+            user.save((err, data) => {
+              if (err) {
+                return res.status(400).json({
+                  error: errorHandler(err),
+                });
+              }
+
+              const token = jwt.sign({_id: user._id}, process.env.JWT_SECRET, {
+                expiresIn: process.env.TOKEN_EXPIRE,
+              });
+              res.cookie('token', token, {
+                expiresIn: process.env.TOKEN_EXPIRE,
+              });
+              const {_id, email, name, role, username} = user;
+
+              return res.json({
+                token,
+                user: {_id, email, name, role, username},
+              });
+            });
+          }
+        });
+
+        // ユーザーのメールアドレスが検証済みではない
+      } else {
+        return res.status(400).json({
+          error: 'Google login failed. Try again',
+        });
+      }
+    });
 };
