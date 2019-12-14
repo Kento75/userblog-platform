@@ -1,0 +1,27 @@
+{
+  "name": "userblog-platform",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm-run-all -p \"prefix:* -- install\" && npm-run-all -p \"run:* -- {@}\"",
+    "run:client": "npm --prefix ./client start",
+    "run:server": "npm --prefix ./server start",
+    "prefix:client": "npm --prefix ./client",
+    "prefix:server": "npm --prefix ./server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kento75/userblog-platform.git"
+  },
+  "keywords": [],
+  "author": "kento75 <kento2github@gmail.com> (https://overreact.tk)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kento75/userblog-platform/issues"
+  },
+  "homepage": "https://github.com/Kento75/userblog-platform#readme",
+  "dependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}

@@ -14,11 +14,14 @@ const ReactQuill = dynamic(() => import('react-quill'), {ssr: false});
 
 const CreateBlog = ({router}) => {
   // localStorageに下書きがある場合表示
-  const blogFromLS = () =>
-    typeof window !== 'undefined' && localStorage.getItem('blog')
-      ? JSON.parse(localStorage.getItem('blog'))
-      : false;
-
+  const blogFromLS = () => {
+    if (process.browser) {
+      if (typeof window !== 'undefined' && localStorage.getItem('blog')) {
+        return JSON.parse(localStorage.getItem('blog'));
+      }
+    }
+    return false;
+  };
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
   const [checkedCategory, setCheckedCategory] = useState([]); // categories
@@ -104,8 +107,15 @@ const CreateBlog = ({router}) => {
   };
 
   // URLオブジェクトを作成する
-  const createObjectURL =
-    (window.URL || window.webkitURL).createObjectURL || window.createObjectURL;
+  const createObjectURL = () => {
+    if (process.browser) {
+      return (
+        (window.URL || window.webkitURL).createObjectURL ||
+        window.createObjectURL
+      );
+    }
+    return null;
+  };
 
   const handleChange = name => e => {
     console.log(e.target.value, name);
